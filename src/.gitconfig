@@ -1,0 +1,19 @@
+[user]
+	name = Yuichiro NAKAGAWA
+	email = ii.hsif.drows@gmail.com
+[url "git@github.com:Mekajiki/"]
+  insteadof = gh:
+[url "grg@mekajiki.net:/home/grg/repos/"]
+  insteadof = mek:
+[github]
+	user = mekajiki
+[core]
+	editor = /usr/bin/vim
+	excludesfile = ~/.gitignore_global
+[color]
+  ui = auto
+  diff = auto
+  status = auto
+  branch = auto
+  interactive = auto
+  ui = auto
