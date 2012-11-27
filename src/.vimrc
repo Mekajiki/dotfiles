@@ -14,6 +14,7 @@ Bundle 'https://github.com/kchmck/vim-coffee-script.git'
 Bundle 'Shougo/neocomplcache.git'
 Bundle 'https://github.com/Shougo/neosnippet.git'
 Bundle 'https://github.com/vim-scripts/VimClojure'
+Bundle 'https://github.com/drupal/drupal.git'
 " General
 " -------------------------------------------------------------
 set enc=utf-8
@@ -117,6 +118,21 @@ set backupdir=/tmp/
 " -------------------------------------------------------------
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip
 let g:ctrlp_custom_ignore = '\v[\/](\.git|\.hg|\.svn)$'
+" PHP highlighting
+" -------------------------------------------------------------
+if has("autocmd")
+    " Drupal *.module and *.install files.
+    augroup module
+      autocmd BufRead,BufNewFile *.module set filetype=php
+      autocmd BufRead,BufNewFile *.install set filetype=php
+      autocmd BufRead,BufNewFile *.test set filetype=php
+      autocmd BufRead,BufNewFile *.inc set filetype=php
+      autocmd BufRead,BufNewFile *.profile set filetype=php
+      autocmd BufRead,BufNewFile *.view set filetype=php
+      autocmd BufRead,BufNewFile *.view set filetype=haml
+    augroup END
+    autocmd FileType php setlocal expandtab shiftwidth=4 softtabstop=4
+endif
 " Completion
 " -------------------------------------------------------------
 set history=700
