@@ -22,6 +22,8 @@ alias gpull='git pull'
 alias gpush='git push'
 alias gdif='git diff'
 alias gg='git grep'
+alias grb='git rebase'
+alias grm='git redmine'
 
 # comp
 #
