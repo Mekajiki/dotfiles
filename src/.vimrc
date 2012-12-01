@@ -15,6 +15,7 @@ Bundle 'Shougo/neocomplcache.git'
 Bundle 'https://github.com/Shougo/neosnippet.git'
 Bundle 'https://github.com/vim-scripts/VimClojure'
 Bundle 'https://github.com/drupal/drupal.git'
+Bundle 'https://github.com/tpope/vim-fugitive.git'
 " General
 " -------------------------------------------------------------
 set enc=utf-8
@@ -103,6 +104,9 @@ noremap ss :w<CR>
 noremap qq :q<CR>
 noremap <Space>. :<C-u>edit $MYVIMRC<Enter>
 noremap <Space>s. :<C-u>source $MYVIMRC<Enter>
+" Fugitive
+" -------------------------------------------------------------
+com Gb Gblame
 " Auto Exexuted Commands
 " -------------------------------------------------------------
 augroup Autocmds
