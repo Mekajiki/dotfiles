@@ -1,4 +1,5 @@
-export LANG=ja_JP.UTF-8
+export LC_ALL="en_US.UTF-8"
+export LANG="en_JP.UTF-8"
 
 export FLEX_HOME=$HOME/sharedItems/flex_sdk_3.5.0.12683
 
