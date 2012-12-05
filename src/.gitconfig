@@ -10,6 +10,7 @@
 [core]
 	editor = /usr/bin/vim
 	excludesfile = ~/.gitignore_global
+	pager = lv -c
 [color]
   ui = auto
   diff = auto
