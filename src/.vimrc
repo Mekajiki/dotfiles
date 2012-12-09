@@ -107,6 +107,7 @@ noremap <Space>s. :<C-u>source $MYVIMRC<Enter>
 " Fugitive
 " -------------------------------------------------------------
 com Gb Gblame
+com -nargs=+ Gg Git grep <args>
 " Auto Exexuted Commands
 " -------------------------------------------------------------
 augroup Autocmds
