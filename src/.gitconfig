@@ -18,3 +18,5 @@
   branch = auto
   interactive = auto
   ui = auto
+[rebase]
+	autosquash = true
