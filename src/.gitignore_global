@@ -14,5 +14,6 @@ which, according to this Apple mailing list post, are "user-specific project set
 And for Xcode 4:
 
 xcuserdata
+*.xcworkspacedata
 *.swp
 .DS_Store
