@@ -13,6 +13,7 @@ alias ls="ls -Gv"
 #git aliases
 eval "$(hub alias -s)"
 alias g='git'
+alias gf='git flow'
 alias gs='git status -s -b'
 alias gb='git branch --color'
 alias gco='git checkout'
