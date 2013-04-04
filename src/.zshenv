@@ -92,6 +92,10 @@ PROMPT='%n'$YELLOW'@%M:'$CYAN'%~%$
 ${vcs_info_msg_0_}'$DEFAULT' $ '
 PROMPT2="%_%% "
 
+# RVM
+#
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 
-export RSENSE_HOME=$HOME/.vim/rsense 
+# RVM
+#
+export RSENSE_HOME=$HOME/.vim/rsense
