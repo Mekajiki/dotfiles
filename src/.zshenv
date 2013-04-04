@@ -9,6 +9,7 @@ source $HOME/.rvm/scripts/rvm
 #aliases
 #
 alias f='fg'
+alias v='vim'
 alias ls="ls -Gv"
 #git aliases
 eval "$(hub alias -s)"
