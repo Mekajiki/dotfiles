@@ -70,26 +70,34 @@ setopt correct
 
 # Prompt
 #
+local CYAN=$'%{\e[1;36m%}'
+local YELLOW=$'%{\e[1;33m%}'
+local DEFAULT=$'%{\e[1;32m%}'
+
 autoload -Uz vcs_info
 zstyle ':vcs_info:*' enable git
 zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' unstagedstr '%F{yellow}変'
 precmd() {
-  local format_string='%F{white}%b %u'
+  local format_string='%F{white}%b'$DEFAULT':'
+
+  if [[ -n $(git ls-files --modified 2> /dev/null) ]] {
+    format_string+=' %u'
+  }
+
   if [[ -n $(git ls-files --other --exclude-standard 2> /dev/null) ]] {
     format_string+='%F{red}未'
   }
+  format_string+=' '
+
   zstyle ':vcs_info:git*' formats $format_string
   vcs_info
 }
 
 setopt prompt_subst
 
-local CYAN=$'%{\e[1;36m%}'
-local YELLOW=$'%{\e[1;33m%}'
-local DEFAULT=$'%{\e[1;32m%}'
 PROMPT='%n'$YELLOW'@%M:'$CYAN'%~%$
-${vcs_info_msg_0_}'$DEFAULT' $ '
+${vcs_info_msg_0_}'$DEFAULT'$ '
 PROMPT2="%_%% "
 
 # RVM
