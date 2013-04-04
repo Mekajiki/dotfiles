@@ -78,7 +78,7 @@ local DEFAULT=$'%{\e[1;32m%}'
 autoload -Uz vcs_info
 zstyle ':vcs_info:*' enable git
 zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' unstagedstr '%F{yellow}変'
+zstyle ':vcs_info:*' unstagedstr '%F{yellow}改'
 precmd() {
   local format_string='%F{white}%b'$DEFAULT':'
 
