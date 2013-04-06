@@ -3,15 +3,7 @@ export LANG="en_JP.UTF-8"
 
 export FLEX_HOME=$HOME/sharedItems/flex_sdk_3.5.0.12683
 
-export PATH=/usr/local/java/android-sdk/platform-tools:/usr/local/java/android-sdk/tools:/Users/administrator/Library/Haskell/ghc-7.0.3/lib/egison-0.2.1.1/bin:$HOME/sharedItems/bin:$HOME/bin:$FLEX_HOME/bin:/usr/local/sbin:/usr/local/Library/Sencha/Cmd/4.0.0.203/:/usr/local/bin:$PATH
-
-if [[ -f ~/.rvm/scripts/rvm ]] {
-  source $HOME/.rvm/scripts/rvm
-}
-
-sumContribution(){
-  gl --author=ii.hsif.drows@gmail.com --shortstat --since=$1 |grep 'files\? changed' | awk '{files+=$1; inserted+=$4; deleted+=$6} END {print "files changed", files, "lines inserted:", inserted, "lines deleted:", deleted}'
-}
+export PATH=/Users/administrator/Library/Haskell/ghc-7.0.3/lib/egison-0.2.1.1/bin:$HOME/sharedItems/bin:$HOME/bin:$FLEX_HOME/bin:/usr/local/sbin:$PATH
 
 #aliases
 #
@@ -19,7 +11,9 @@ alias f='fg'
 alias v='vim'
 alias ls="ls -Gv"
 #git aliases
-eval "$(hub alias -s)"
+if (( $+commands[hub] )) {
+  eval "$(hub alias -s)"
+}
 alias g='git'
 alias gf='git flow'
 alias gs='git status -s -b'
@@ -58,13 +52,22 @@ bindkey "^N" history-beginning-search-forward-end
 #
 setopt auto_cd
 
+# z - jump around
+#
+if [[ -d $HOME/repos/z ]] {
+  . $HOME/repos/z/z.sh
+  function precmd () {
+  _z --add "$(pwd -P)"
+  }
+}
+
 # use #, ~, ^ as regexp in filename
 #
 setopt extended_glob
 
 # no more escape for git carrets like HEAD^
 #
-if [[ -f ~/repos/zsh-git-escape-magic ]] {
+if [[ -d $HOME/repos/zsh-git-escape-magic ]] {
   fpath=(~/repos/zsh-git-escape-magic ${fpath})
   autoload -Uz git-escape-magic
   git-escape-magic
@@ -108,6 +111,9 @@ PROMPT2="%_%% "
 
 # RVM
 #
+if [[ -e $HOME/.rvm ]] {
+  source $HOME/.rvm/scripts/rvm
+}
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 
 # RVM
