@@ -56,6 +56,15 @@ bindkey "^N" history-beginning-search-forward-end
 #
 setopt auto_cd
 
+# z - jump around
+#
+if [[ -d $HOME/repos/z ]] {
+  . $HOME/repos/z/z.sh
+  function precmd () {
+  _z --add "$(pwd -P)"
+  }
+}
+
 # use #, ~, ^ as regexp in filename
 #
 setopt extended_glob
