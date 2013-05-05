@@ -4,7 +4,10 @@ export LANG="en_JP.UTF-8"
 export FLEX_HOME=$HOME/sharedItems/flex_sdk_3.5.0.12683
 
 export PATH=/Users/administrator/Library/Haskell/ghc-7.0.3/lib/egison-0.2.1.1/bin:$HOME/sharedItems/bin:$HOME/bin:$FLEX_HOME/bin:/usr/local/sbin:$PATH
-source $HOME/.rvm/scripts/rvm
+
+if [[ -f ~/.rvm/scripts/rvm ]] {
+  source $HOME/.rvm/scripts/rvm
+}
 
 #aliases
 #
@@ -50,10 +53,12 @@ setopt auto_cd
 
 # z - jump around
 #
-. $HOME/repos/z/z.sh
-        function precmd () {
-          _z --add "$(pwd -P)"
-        }
+if [[ -f ~/repos/z/z.sh ]] {
+  . $HOME/repos/z/z.sh
+  function precmd () {
+    _z --add "$(pwd -P)"
+  }
+}
 
 # use #, ~, ^ as regexp in filename
 #
@@ -61,9 +66,11 @@ setopt extended_glob
 
 # no more escape for git carrets like HEAD^
 #
-fpath=(~/repos/zsh-git-escape-magic ${fpath})
-autoload -Uz git-escape-magic
-git-escape-magic
+if [[ -f ~/repos/zsh-git-escape-magic ]] {
+  fpath=(~/repos/zsh-git-escape-magic ${fpath})
+  autoload -Uz git-escape-magic
+  git-escape-magic
+}
 
 # correct spell miss
 #
