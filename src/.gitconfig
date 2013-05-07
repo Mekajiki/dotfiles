@@ -5,6 +5,8 @@
   insteadof = gh:
 [url "grg@mekajiki.net:/home/grg/repos/"]
   insteadof = mek:
+[url "ssh://git@bitbucket.org/lambdainc/"]
+  insteadof = lambda:
 [github]
 	user = mekajiki
 [core]
