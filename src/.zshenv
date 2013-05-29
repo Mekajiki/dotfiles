@@ -44,21 +44,13 @@ SAVEHIST=1000000
 autoload history-search-end
 zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end history-search-end
+bindkey -e
 bindkey "^P" history-beginning-search-backward-end
 bindkey "^N" history-beginning-search-forward-end
 
 # auto change directory
 #
 setopt auto_cd
-
-# z - jump around
-#
-if [[ -f ~/repos/z/z.sh ]] {
-  . $HOME/repos/z/z.sh
-  function precmd () {
-    _z --add "$(pwd -P)"
-  }
-}
 
 # use #, ~, ^ as regexp in filename
 #
