@@ -13,4 +13,6 @@ xcuserdata
 *.xcworkspacedata
 *.swp
 *.swo
+*.iml
+*.idea
 .DS_Store
