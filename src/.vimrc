@@ -16,7 +16,7 @@ Bundle 'https://github.com/Shougo/neosnippet.git'
 Bundle 'https://github.com/vim-scripts/VimClojure'
 Bundle 'https://github.com/drupal/drupal.git'
 Bundle 'https://github.com/tpope/vim-fugitive.git'
-Bundle 'http://github.com/tpope/vim-surround'
+Bundle 'https://github.com/tpope/vim-surround'
 " General
 " -------------------------------------------------------------
 set enc=utf-8
