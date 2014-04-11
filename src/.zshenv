@@ -9,6 +9,10 @@ if [[ -f ~/.rvm/scripts/rvm ]] {
   source $HOME/.rvm/scripts/rvm
 }
 
+sumContribution(){
+  gl --author=ii.hsif.drows@gmail.com --shortstat --since=$1 |grep 'changed.*insertions.*deletions' | awk '{files+=$1; inserted+=$4; deleted+=$6} END {print "files changed", files, "lines inserted:", inserted, "lines deleted:", deleted}'
+}
+
 #aliases
 #
 alias f='fg'
@@ -32,6 +36,8 @@ alias gg='git grep'
 alias grb='git rebase'
 alias gbr='git branch'
 alias grm='git redmine'
+alias today="sumContribution 1.day"
+alias week="sumContribution 1.week"
 
 # comp
 #
