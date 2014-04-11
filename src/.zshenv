@@ -5,6 +5,10 @@ export FLEX_HOME=$HOME/sharedItems/flex_sdk_3.5.0.12683
 
 export PATH=/Users/administrator/Library/Haskell/ghc-7.0.3/lib/egison-0.2.1.1/bin:$HOME/sharedItems/bin:$HOME/bin:$FLEX_HOME/bin:/usr/local/sbin:$PATH
 
+sumContribution(){
+  gl --author=ii.hsif.drows@gmail.com --shortstat --since=$1 |grep 'changed.*insertions.*deletions' | awk '{files+=$1; inserted+=$4; deleted+=$6} END {print "files changed", files, "lines inserted:", inserted, "lines deleted:", deleted}'
+}
+
 #aliases
 #
 alias f='fg'
