@@ -137,7 +137,8 @@ if has("autocmd")
       autocmd BufRead,BufNewFile *.view set filetype=php
       autocmd BufRead,BufNewFile *.view set filetype=haml
     augroup END
-    autocmd FileType php setlocal expandtab shiftwidth=4 softtabstop=4
+    autocmd FileType php setlocal expandtab shiftwidth=2 softtabstop=2
+    autocmd FileType python setlocal expandtab shiftwidth=2 softtabstop=2
 endif
 " Completion
 " -------------------------------------------------------------
