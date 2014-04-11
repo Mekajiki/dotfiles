@@ -22,3 +22,5 @@
   ui = auto
 [rebase]
 	autosquash = true
+[push]
+	default = simple
