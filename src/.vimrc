@@ -159,10 +159,10 @@ if has('conceal')
   set conceallevel=2 concealcursor=i
 endif
 
-nmap <silent> ; :set opfunc=ReplaceWithBuffer<CR>g@
-vmap <silent> ; :<C-U>call ReplaceWithBuffer(visualmode(), 1)<CR>
+nmap <silent> ; :set opfunc=ReplaceWithRegister<CR>g@
+vmap <silent> ; :<C-U>call ReplaceWithRegister(visualmode(), 1)<CR>
 
-function! ReplaceWithBuffer(type, ...)
+function! ReplaceWithRegister(type, ...)
   let sel_save = &selection
   let &selection = "inclusive"
   let reg_a = @a
