@@ -120,6 +120,7 @@ augroup Autocmds
 " Other
 " -------------------------------------------------------------
 set backupdir=/tmp/
+set pastetoggle=pp
 "" CtrlP
 " -------------------------------------------------------------
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip
