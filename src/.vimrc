@@ -158,6 +158,33 @@ smap <expr><TAB> neosnippet#expandable() ? "\<Plug>(neosnippet_expand_or_jump)" 
 if has('conceal')
   set conceallevel=2 concealcursor=i
 endif
+
+nmap <silent> ; :set opfunc=ReplaceWithBuffer<CR>g@
+vmap <silent> ; :<C-U>call ReplaceWithBuffer(visualmode(), 1)<CR>
+
+function! ReplaceWithBuffer(type, ...)
+  let sel_save = &selection
+  let &selection = "inclusive"
+  let reg_a = @a
+  let reg_z = @z
+  let @z = @@
+
+  if a:0  " Invoked from Visual mode, use '< and '> marks.
+    silent exe 'normal! `<' . a:type . '`>"ad"zP'
+  elseif a:type == 'line'
+    silent exe "normal! '[V']\"ad\"zP"
+  elseif a:type == 'block'
+    silent exe "normal! `[\<C-V>`]\"ad`[\"zP"
+  else
+    silent exe 'normal! `["ad`]"Ax"zP'
+  endif
+
+  let &selection = sel_save
+  let @@ = @a
+  let @a = reg_a
+  let @z = reg_z
+endfunction
+
 "" Scouter
 " -------------------------------------------------------------
 function! Scouter(file, ...)
