@@ -120,7 +120,7 @@ augroup Autocmds
 " Other
 " -------------------------------------------------------------
 set backupdir=/tmp/
-noremap pp :set paste!<CR>
+noremap tp :set paste!<CR>
 "" CtrlP
 " -------------------------------------------------------------
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip
