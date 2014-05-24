@@ -76,6 +76,34 @@ if [[ -f ~/repos/zsh-git-escape-magic ]] {
 #
 setopt correct
 
+# RVM
+#
+if [[ -e $HOME/.rvm ]] {
+  source $HOME/.rvm/scripts/rvm
+}
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+
+# RVM
+#
+export RSENSE_HOME=$HOME/.vim/rsense
+zstyle :compinstall filename '~/.zshrc'
+
+# About ls command
+#
+export LSCOLORS=gxfxcxdxbxhggdabagacad
+zstyle ':completion:*' list-colors 'di=36' 'ln=35' 'ex=31' 'bd=37;46' 'cd=36;43'
+
+# end About ls command
+
+# z - jump around
+#
+if [[ -f ~/repos/z/z.sh ]] {
+  . $HOME/repos/z/z.sh
+  function precmd () {
+    _z --add "$(pwd -P)"
+  }
+}
+
 # Prompt
 #
 local CYAN=$'%{\e[1;36m%}'
@@ -133,4 +161,3 @@ if [[ -d $HOME/repos/z ]] {
   _z --add "$(pwd -P)"
   }
 }
-
