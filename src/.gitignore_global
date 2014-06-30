@@ -16,3 +16,5 @@ xcuserdata
 *.iml
 *.idea
 .DS_Store
+
+*.gem
