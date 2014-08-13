@@ -10,7 +10,7 @@ if [[ -f ~/.rvm/scripts/rvm ]] {
 }
 
 sumContribution(){
-  gl --author=ii.hsif.drows@gmail.com --shortstat --since=$1 |grep 'files\? changed' | awk '{files+=$1; inserted+=$4; deleted+=$6} END {print "files changed", files, "lines inserted:", inserted, "lines deleted:", deleted}'
+  git log --author=ii.hsif.drows@gmail.com --shortstat --since=$1 |grep 'files\? changed' | awk '{files+=$1; inserted+=$4; deleted+=$6} END {print "files changed", files, "lines inserted:", inserted, "lines deleted:", deleted}'
 }
 
 #aliases
