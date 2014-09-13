@@ -13,6 +13,15 @@ sumContribution(){
   git log --author=ii.hsif.drows@gmail.com --shortstat --since=$1 |grep 'files\? changed' | awk '{files+=$1; inserted+=$4; deleted+=$6} END {print "files changed", files, "lines inserted:", inserted, "lines deleted:", deleted}'
 }
 
+#by os settings
+case ${OSTYPE} in
+  darwin*)
+   fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
+      ;;
+  linux*)
+      ;;
+esac
+
 #aliases
 #
 alias f='fg'
