@@ -3,7 +3,9 @@ export LANG="en_JP.UTF-8"
 
 export FLEX_HOME=$HOME/sharedItems/flex_sdk_3.5.0.12683
 
-export PATH=/usr/local/go/bin:/usr/local/java/android-sdk/platform-tools:/usr/local/java/android-sdk/tools:/Users/administrator/Library/Haskell/ghc-7.0.3/lib/egison-0.2.1.1/bin:$HOME/sharedItems/bin:$HOME/bin:$FLEX_HOME/bin:/usr/local/sbin:/usr/local/Library/Sencha/Cmd/4.0.0.203/:/usr/local/bin:$PATH
+export GOPATH=$HOME/go
+
+export PATH=$GOPATH/bin:/usr/local/go/bin:/usr/local/java/android-sdk/platform-tools:/usr/local/java/android-sdk/tools:/Users/administrator/Library/Haskell/ghc-7.0.3/lib/egison-0.2.1.1/bin:$HOME/sharedItems/bin:$HOME/bin:$FLEX_HOME/bin:/usr/local/sbin:/usr/local/Library/Sencha/Cmd/4.0.0.203/:/usr/local/bin:$PATH
 
 if [[ -f ~/.rvm/scripts/rvm ]] {
   source $HOME/.rvm/scripts/rvm
