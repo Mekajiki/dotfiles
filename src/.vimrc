@@ -18,6 +18,7 @@ Bundle 'https://github.com/vim-scripts/VimClojure'
 Bundle 'https://github.com/drupal/drupal.git'
 Bundle 'https://github.com/tpope/vim-fugitive.git'
 Bundle 'https://github.com/tpope/vim-surround'
+Bundle 'fatih/vim-go'
 " General
 " -------------------------------------------------------------
 set enc=utf-8
