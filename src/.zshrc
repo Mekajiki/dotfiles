@@ -12,7 +12,10 @@ if [[ -f ~/.rvm/scripts/rvm ]] {
 }
 
 sumContribution(){
-  git log --author=ii.hsif.drows@gmail.com --shortstat --since=$1 |grep 'files\? changed' | awk '{files+=$1; inserted+=$4; deleted+=$6} END {print "files changed", files, "lines inserted:", inserted, "lines deleted:", deleted}'
+  author=$2
+  if [ -z "$author" ]; then author='ii.hsif.drows@gmail.com'; fi
+  echo "Author: $author"
+  git log --author=$author --shortstat --since=$1 |grep 'files\? changed' | awk '{files+=$1; inserted+=$4; deleted+=$6} END {print "files changed", files, "lines inserted:", inserted, "lines deleted:", deleted}'
 }
 
 #by os settings
