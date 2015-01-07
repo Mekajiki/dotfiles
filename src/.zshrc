@@ -168,6 +168,11 @@ precmd() {
 
   zstyle ':vcs_info:git*' formats $format_string
   vcs_info
+
+  # set current dir as the name of tmux window
+  if (tmux info &> /dev/null) {
+    tmux set-window-option window-status-format " #I:${PWD:t} " > /dev/null
+  }
 }
 
 setopt prompt_subst
