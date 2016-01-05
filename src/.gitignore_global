@@ -18,3 +18,5 @@ xcuserdata
 .DS_Store
 
 *.gem
+
+.gradle
