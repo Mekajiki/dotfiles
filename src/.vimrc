@@ -20,6 +20,7 @@ Bundle 'https://github.com/tpope/vim-fugitive.git'
 Bundle 'https://github.com/tpope/vim-surround'
 Bundle 'fatih/vim-go'
 Bundle 'tpope/vim-sleuth'
+Bundle 'tfnico/vim-gradle'
 " General
 " -------------------------------------------------------------
 set enc=utf-8
