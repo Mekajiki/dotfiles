@@ -21,6 +21,7 @@ Bundle 'https://github.com/tpope/vim-surround'
 Bundle 'fatih/vim-go'
 Bundle 'tpope/vim-sleuth'
 Bundle 'tfnico/vim-gradle'
+Bundle 'derekwyatt/vim-scala'
 " General
 " -------------------------------------------------------------
 set enc=utf-8
