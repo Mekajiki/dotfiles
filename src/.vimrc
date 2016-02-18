@@ -128,7 +128,7 @@ set backupdir=/tmp/
 noremap tp :set paste!<CR>
 "" CtrlP
 " -------------------------------------------------------------
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.class
 let g:ctrlp_custom_ignore = '\v[\/](\.git|\.hg|\.svn)$'
 " PHP highlighting
 " -------------------------------------------------------------
