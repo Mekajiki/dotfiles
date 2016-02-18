@@ -62,6 +62,8 @@ alias week="sumContribution 1.week"
 
 alias json='python -m json.tool'
 
+alias prs='ps aux | grep'
+
 # comp
 #
 autoload -Uz compinit
