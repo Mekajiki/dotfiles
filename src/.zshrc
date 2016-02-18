@@ -24,9 +24,11 @@ sumContribution(){
 #by os settings
 case ${OSTYPE} in
   darwin*)
+    setopt hist_ignore_dups share_history inc_append_history extended_history
     fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
       ;;
   linux*)
+    setopt hist_ignore_dups share_history inc_append_history
     alias pbcopy='xclip -selection clipboard'
     alias pbpaste='xclip -selection clipboard -o'
       ;;
@@ -68,7 +70,6 @@ alias prs='ps aux | grep'
 #
 autoload -Uz compinit
 compinit
-setopt hist_ignore_dups share_history inc_append_history extended_history
 HISTFILE=~/.histfile
 HISTSIZE=1000000
 SAVEHIST=1000000
