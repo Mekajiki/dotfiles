@@ -24,9 +24,11 @@ sumContribution(){
 #by os settings
 case ${OSTYPE} in
   darwin*)
-   fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
+    fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
       ;;
   linux*)
+    alias pbcopy='xclip -selection clipboard'
+    alias pbpaste='xclip -selection clipboard -o'
       ;;
 esac
 
