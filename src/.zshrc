@@ -60,6 +60,8 @@ alias grm='git redmine'
 alias today="sumContribution 1.day"
 alias week="sumContribution 1.week"
 
+alias json='python -m json.tool'
+
 # comp
 #
 autoload -Uz compinit
