@@ -21,3 +21,7 @@ xcuserdata
 
 .gradle
 *.pyc
+
+*.o
+
+*.hi
