@@ -62,6 +62,12 @@ alias grm='git redmine'
 alias today="sumContribution 1.day"
 alias week="sumContribution 1.week"
 
+alias pomoi='pomo incomplete'
+alias pomoc='pomo complete'
+alias pomos='pomo start'
+alias pomob='pomo break'
+alias pomoa='pomo add'
+
 alias json='python -m json.tool'
 
 alias prs='ps aux | grep'
