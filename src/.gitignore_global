@@ -20,3 +20,4 @@ xcuserdata
 *.gem
 
 .gradle
+*.pyc
