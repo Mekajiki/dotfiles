@@ -72,6 +72,8 @@ alias json='python -m json.tool'
 
 alias prs='ps aux | grep'
 
+alias dl='gradle'
+
 # comp
 #
 autoload -Uz compinit
