@@ -14,6 +14,6 @@ myConfig = defaultConfig
     { startupHook = setWMName "LG3D"
     , modMask = mod4Mask
     } `additionalKeys`
-    [ ((mod1Mask, xK_grave), spawn "ibus engine xkb:us::eng")
-    , ((mod4Mask, xK_grave), spawn "ibus engine mozc-jp")
+    [ ((mod1Mask, xK_space), spawn "ibus engine xkb:us::eng")
+    , ((mod1Mask .|. shiftMask , xK_space), spawn "ibus engine mozc-jp")
     ]
