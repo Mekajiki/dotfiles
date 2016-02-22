@@ -10,7 +10,10 @@ Config {
         "-L", "-15", "-H", "-5",
         "-l", "red", "-m", "blue", "-h", "green"]
       600
-    , Run StdinReader  
+    , Run StdinReader
+    , Run CpuFreq ["-t", "Freq:<cpu0>|<cpu1>GHz", "-L", "0", "-H", "2",
+                  "-l", "lightblue", "-n","white", "-h", "red"] 50
+    , Run Com "ibus" ["engine"] "" 1
     ]
-    , template = "%StdinReader% }{ %cpu% %battery% | %date%"
+    , template = "%ibus% %StdinReader% }{ %cpufreq% %cpu% %battery% | %date%"
 }
