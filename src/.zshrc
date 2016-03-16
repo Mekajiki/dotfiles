@@ -62,7 +62,7 @@ alias grm='git redmine'
 alias today="sumContribution 1.day"
 alias week="sumContribution 1.week"
 
-alias pomoi='pomo incomplete'
+alias pomoi='pomo incomplete last'
 alias pomoc='pomo complete'
 alias pomos='pomo start'
 alias pomob='pomo break'
