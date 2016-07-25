@@ -129,7 +129,7 @@ noremap tp :set paste!<CR>
 "" CtrlP
 " -------------------------------------------------------------
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.class
-let g:ctrlp_custom_ignore = '\v[\/](\.git|\.hg|\.svn)$'
+let g:ctrlp_custom_ignore = '\v[\/](\.git|\.hg|\.svn|node_modules|build)$'
 " PHP highlighting
 " -------------------------------------------------------------
 if has("autocmd")
