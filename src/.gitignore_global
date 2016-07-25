@@ -25,3 +25,6 @@ xcuserdata
 *.o
 
 *.hi
+
+node_modules
+npm-debug.log
