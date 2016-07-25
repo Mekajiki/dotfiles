@@ -1,6 +1,6 @@
 [user]
-	name = Yuichiro NAKAGAWA
-	email = ii.hsif.drows@gmail.com
+  name = Yuichiro NAKAGAWA
+  email = ii.hsif.drows@gmail.com
 [url "git@github.com:Mekajiki/"]
   insteadof = gh:
 [url "grg@mekajiki.net:/home/grg/repos/"]
@@ -8,11 +8,11 @@
 [url "ssh://git@bitbucket.org/lambdainc/"]
   insteadof = lambda:
 [github]
-	user = mekajiki
+  user = mekajiki
 [core]
-	editor = /usr/bin/vim
-	excludesfile = ~/.gitignore_global
-	pager = lv -c
+  editor = /usr/bin/vim
+  excludesfile = ~/.gitignore_global
+  pager = lv -c
   whitespace = trailing-space,space-before-tab
 [apply]
   whitespace = fix 
@@ -24,6 +24,8 @@
   interactive = auto
   ui = auto
 [rebase]
-	autosquash = true
+  autosquash = true
 [push]
-	default = simple
+  default = simple
+[diff]
+  compactionHeuristic = true
