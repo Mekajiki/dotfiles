@@ -6,6 +6,7 @@ import XMonad.Util.CustomKeys
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig(additionalKeys)
 import System.IO
+import XMonad.Config.Gnome
 
 main = do
   xmonad =<< xmobar myConfig
@@ -13,7 +14,4 @@ main = do
 myConfig = defaultConfig
     { startupHook = setWMName "LG3D"
     , modMask = mod4Mask
-    } `additionalKeys`
-    [ ((mod1Mask, xK_space), spawn "ibus engine xkb:us::eng")
-    , ((mod1Mask .|. shiftMask , xK_space), spawn "ibus engine mozc-jp")
-    ]
+    }
