@@ -74,6 +74,8 @@ alias prs='ps aux | grep'
 
 alias dl='gradle'
 
+alias node='nodejs'
+
 # comp
 #
 autoload -Uz compinit
