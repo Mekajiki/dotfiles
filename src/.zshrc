@@ -62,6 +62,8 @@ alias grm='git redmine'
 alias today="sumContribution 1.day"
 alias week="sumContribution 1.week"
 
+alias tp="tmux show-buffer |pbcopy"
+
 alias pomoi='pomo incomplete last'
 alias pomoc='pomo complete'
 alias pomos='pomo start'
