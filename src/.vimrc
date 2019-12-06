@@ -22,6 +22,8 @@ Bundle 'fatih/vim-go'
 Bundle 'tpope/vim-sleuth'
 Bundle 'tfnico/vim-gradle'
 Bundle 'derekwyatt/vim-scala'
+Bundle 'tpope/vim-bundler'
+Bundle 'tpope/vim-pathogen'
 " General
 " -------------------------------------------------------------
 set enc=utf-8
@@ -189,6 +191,13 @@ function! ReplaceWithRegister(type, ...)
   let @a = reg_a
   let @z = reg_z
 endfunction
+
+"" Gem-ctags
+" -------------------------------------------------------------
+execute pathogen#infect()
+autocmd FileType ruby let &l:tags = pathogen#legacyjoin(pathogen#uniq(
+      \ pathogen#split(&tags) +
+      \ map(split($GEM_PATH,':'),'v:val."/gems/*/tags"')))
 
 "" Scouter
 " -------------------------------------------------------------
