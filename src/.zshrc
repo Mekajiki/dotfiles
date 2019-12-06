@@ -10,10 +10,6 @@ export PATH=$HOME/Applications/android-studio/bin:$PATH
 export PATH=/usr/local/share/scala/bin:$PATH
 export PYTHONPATH=$HOME/caffe/python:$PYTHONPATH
 
-if [[ -f ~/.rvm/scripts/rvm ]] {
-  source $HOME/.rvm/scripts/rvm
-}
-
 sumContribution(){
   author=$2
   if [ -z "$author" ]; then author='ii.hsif.drows@gmail.com'; fi
@@ -112,14 +108,7 @@ if [[ -f ~/repos/zsh-git-escape-magic ]] {
 #
 setopt correct
 
-# RVM
-#
-if [[ -e $HOME/.rvm ]] {
-  source $HOME/.rvm/scripts/rvm
-}
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-
-# RVM
+# RSENSE
 #
 export RSENSE_HOME=$HOME/.vim/rsense
 zstyle :compinstall filename '~/.zshrc'
@@ -137,32 +126,6 @@ if [[ -f ~/repos/z/z.sh ]] {
   . $HOME/repos/z/z.sh
   function precmd () {
     _z --add "$(pwd -P)"
-  }
-}
-
-# RVM
-#
-if [[ -e $HOME/.rvm ]] {
-  source $HOME/.rvm/scripts/rvm
-}
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-
-# RVM
-#
-export RSENSE_HOME=$HOME/.vim/rsense
-zstyle :compinstall filename '~/.zshrc'
-
-# About ls command
-#
-export LSCOLORS=gxfxcxdxbxhggdabagacad
-zstyle ':completion:*' list-colors 'di=36' 'ln=35' 'ex=31' 'bd=37;46' 'cd=36;43'
-
-# z - jump around
-#
-if [[ -d $HOME/repos/z ]] {
-  . $HOME/repos/z/z.sh
-  function precmd () {
-  _z --add "$(pwd -P)"
   }
 }
 
