@@ -28,3 +28,7 @@ xcuserdata
 
 node_modules
 npm-debug.log
+
+gradle/
+gradlew
+gradlew.bat
