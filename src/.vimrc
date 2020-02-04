@@ -24,6 +24,7 @@ Bundle 'tfnico/vim-gradle'
 Bundle 'derekwyatt/vim-scala'
 Bundle 'tpope/vim-bundler'
 Bundle 'tpope/vim-pathogen'
+Bundle 'vim-syntastic/syntastic'
 " General
 " -------------------------------------------------------------
 set enc=utf-8
@@ -192,9 +193,16 @@ function! ReplaceWithRegister(type, ...)
   let @z = reg_z
 endfunction
 
-"" Gem-ctags
+"" Pathogen
 " -------------------------------------------------------------
 execute pathogen#infect()
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+"" Gem-ctags
+" -------------------------------------------------------------
 autocmd FileType ruby let &l:tags = pathogen#legacyjoin(pathogen#uniq(
       \ pathogen#split(&tags) +
       \ map(split($GEM_PATH,':'),'v:val."/gems/*/tags"')))
@@ -213,3 +221,7 @@ command! -bar -bang -nargs=? -complete=file Scouter
 \        echo Scouter(empty(<q-args>) ? $MYVIMRC : expand(<q-args>), <bang>0)
 command! -bar -bang -nargs=? -complete=file GScouter
 \        echo Scouter(empty(<q-args>) ? $MYGVIMRC : expand(<q-args>), <bang>0)
+
+"" Linters
+" -------------------------------------------------------------
+let g:syntastic_python_checkers=['mypy']
