@@ -12,7 +12,6 @@
 [core]
   editor = /usr/bin/vim
   excludesfile = ~/.gitignore_global
-  pager = lv -c
   whitespace = trailing-space,space-before-tab
 [apply]
   whitespace = fix 
