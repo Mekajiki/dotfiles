@@ -5,26 +5,18 @@ set rtp+=~/.vim/vundle/
 call vundle#rc()
 " Plugins
 " -------------------------------------------------------------
-Bundle 'https://github.com/vim-scripts/syntaxhaskell.vim'
-Bundle 'https://github.com/tpope/vim-rails/'
-Bundle 'https://github.com/ervandew/supertab'
-Bundle 'https://github.com/kien/ctrlp.vim.git'
-Bundle 'https://github.com/tpope/vim-endwise.git'
-Bundle 'https://github.com/kchmck/vim-coffee-script.git'
-Bundle 'Shougo/neocomplcache.git'
-Bundle 'Shougo/neosnippet-snippets.git'
-Bundle 'https://github.com/Shougo/neosnippet.git'
-Bundle 'https://github.com/vim-scripts/VimClojure'
-Bundle 'https://github.com/drupal/drupal.git'
-Bundle 'https://github.com/tpope/vim-fugitive.git'
-Bundle 'https://github.com/tpope/vim-surround'
+Bundle 'tpope/vim-rails'
+Bundle 'ervandew/supertab'
+Bundle 'kien/ctrlp.vim'
+Bundle 'tpope/vim-endwise'
+Bundle 'tpope/vim-fugitive'
+Bundle 'tpope/vim-surround'
 Bundle 'fatih/vim-go'
 Bundle 'tpope/vim-sleuth'
 Bundle 'tfnico/vim-gradle'
 Bundle 'derekwyatt/vim-scala'
 Bundle 'tpope/vim-bundler'
 Bundle 'tpope/vim-pathogen'
-Bundle 'vim-syntastic/syntastic'
 " General
 " -------------------------------------------------------------
 set enc=utf-8
@@ -134,94 +126,12 @@ noremap tp :set paste!<CR>
 " -------------------------------------------------------------
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.class
 let g:ctrlp_custom_ignore = '\v[\/](\.git|\.hg|\.svn|node_modules|build)$'
-" PHP highlighting
-" -------------------------------------------------------------
-if has("autocmd")
-    " Drupal *.module and *.install files.
-    augroup module
-      autocmd BufRead,BufNewFile *.module set filetype=php
-      autocmd BufRead,BufNewFile *.install set filetype=php
-      autocmd BufRead,BufNewFile *.test set filetype=php
-      autocmd BufRead,BufNewFile *.inc set filetype=php
-      autocmd BufRead,BufNewFile *.profile set filetype=php
-      autocmd BufRead,BufNewFile *.view set filetype=php
-      autocmd BufRead,BufNewFile *.view set filetype=haml
-    augroup END
-    autocmd FileType php setlocal expandtab shiftwidth=2 softtabstop=2
-endif
 " Completion
 " -------------------------------------------------------------
 set history=700
 set wildmenu
-" Rsense
-let g:rsenseUseOmniFunc = 1
-let g:rsenseHome = expand('~/.vim/rsense')
-" NeoSnippet
-imap <C-q>     <Plug>(neosnippet_expand_or_jump)
-smap <C-q>     <Plug>(neosnippet_expand_or_jump)
-
-imap <expr><TAB> neosnippet#expandable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-
-if has('conceal')
-  set conceallevel=2 concealcursor=i
-endif
-
-nmap <silent> ; :set opfunc=ReplaceWithRegister<CR>g@
-vmap <silent> ; :<C-U>call ReplaceWithRegister(visualmode(), 1)<CR>
-
-function! ReplaceWithRegister(type, ...)
-  let sel_save = &selection
-  let &selection = "inclusive"
-  let reg_a = @a
-  let reg_z = @z
-  let @z = @@
-
-  if a:0  " Invoked from Visual mode, use '< and '> marks.
-    silent exe 'normal! `<' . a:type . '`>"ad"zP'
-  elseif a:type == 'line'
-    silent exe "normal! '[V']\"ad\"zP"
-  elseif a:type == 'block'
-    silent exe "normal! `[\<C-V>`]\"ad`[\"zP"
-  else
-    silent exe 'normal! `["ad`]"Ax"zP'
-  endif
-
-  let &selection = sel_save
-  let @@ = @a
-  let @a = reg_a
-  let @z = reg_z
-endfunction
-
-"" Pathogen
-" -------------------------------------------------------------
-execute pathogen#infect()
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-
 "" Gem-ctags
 " -------------------------------------------------------------
 autocmd FileType ruby let &l:tags = pathogen#legacyjoin(pathogen#uniq(
       \ pathogen#split(&tags) +
       \ map(split($GEM_PATH,':'),'v:val."/gems/*/tags"')))
-
-"" Scouter
-" -------------------------------------------------------------
-function! Scouter(file, ...)
-  let pat = '^\s*$\|^\s*"'
-  let lines = readfile(a:file)
-  if !a:0 || !a:1
-    let lines = split(substitute(join(lines, "\n"), '\n\s*\\', '', 'g'), "\n")
-  endif
-  return len(filter(lines,'v:val !~ pat'))
-endfunction
-command! -bar -bang -nargs=? -complete=file Scouter
-\        echo Scouter(empty(<q-args>) ? $MYVIMRC : expand(<q-args>), <bang>0)
-command! -bar -bang -nargs=? -complete=file GScouter
-\        echo Scouter(empty(<q-args>) ? $MYGVIMRC : expand(<q-args>), <bang>0)
-
-"" Linters
-" -------------------------------------------------------------
-let g:syntastic_python_checkers=['mypy']
