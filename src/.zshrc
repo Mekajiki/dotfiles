@@ -50,13 +50,17 @@ alias gc='git commit -v'
 alias gst='git stash'
 alias gpull='git pull'
 alias gpush='git push'
+alias gpushf='git push --force-with-lease'
 alias gdif='git diff'
 alias gg='git grep'
+alias ggn='git grep --name-only'
 alias grb='git rebase'
 alias gbr='git branch'
 alias grm='git redmine'
 alias today="sumContribution 1.day"
 alias week="sumContribution 1.week"
+
+alias d="docker-compose"
 
 alias tp="tmux show-buffer |pbcopy"
 
