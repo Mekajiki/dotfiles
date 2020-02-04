@@ -172,7 +172,7 @@ PROMPT2="%_%% "
 
 ## Gcloud
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/usr/local/lib/google-cloud-sdk/path.zsh.inc' ]; then source '/usr/local/lib/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f '/Users/mekajiki/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/mekajiki/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/usr/local/lib/google-cloud-sdk/completion.zsh.inc' ]; then source '/usr/local/lib/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f '/Users/mekajiki/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/mekajiki/google-cloud-sdk/completion.zsh.inc'; fi
