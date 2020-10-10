@@ -17,6 +17,7 @@ Bundle 'tfnico/vim-gradle'
 Bundle 'derekwyatt/vim-scala'
 Bundle 'tpope/vim-bundler'
 Bundle 'tpope/vim-pathogen'
+Bundle 'slim-template/vim-slim'
 " General
 " -------------------------------------------------------------
 set enc=utf-8
