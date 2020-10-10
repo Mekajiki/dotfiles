@@ -22,11 +22,13 @@ case ${OSTYPE} in
   darwin*)
     setopt hist_ignore_dups share_history inc_append_history extended_history
     fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
+    os_logo="🍎"
       ;;
   linux*)
     setopt hist_ignore_dups share_history inc_append_history
     alias pbcopy='xclip -selection clipboard'
     alias pbpaste='xclip -selection clipboard -o'
+    os_logo="🐧"
       ;;
 esac
 
@@ -171,7 +173,7 @@ precmd() {
 
 setopt prompt_subst
 
-PROMPT='%n'$YELLOW'@%M:'$CYAN'%~%$
+PROMPT='%n'$YELLOW'@%M$os_logo :'$CYAN'%~%$
 ${vcs_info_msg_0_}'$DEFAULT'$ '
 PROMPT2="%_%% "
 
