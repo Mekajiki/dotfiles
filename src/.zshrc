@@ -55,7 +55,8 @@ alias gdif='git diff'
 alias gg='git grep'
 alias ggn='git grep --name-only'
 alias grb='git rebase'
-alias gbr='git branch'
+alias gpr='git pull-request -p'
+
 alias grm='git redmine'
 alias today="sumContribution 1.day"
 alias week="sumContribution 1.week"
