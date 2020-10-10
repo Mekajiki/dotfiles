@@ -32,3 +32,5 @@
 	pushf = push --force-with-lease
 [hub]
 	protocol = ssh
+[pull]
+	rebase = true
