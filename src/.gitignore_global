@@ -38,3 +38,5 @@ gradlew.bat
 .devcontainer
 
 .vscode
+
+docker-compose.override.yml
