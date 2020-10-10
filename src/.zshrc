@@ -181,3 +181,5 @@ if [ -f '/Users/mekajiki/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/mekaji
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/mekajiki/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/mekajiki/google-cloud-sdk/completion.zsh.inc'; fi
+[[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
+[[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
