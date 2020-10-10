@@ -34,3 +34,7 @@ gradlew
 gradlew.bat
 
 .env
+
+.devcontainer
+
+.vscode
