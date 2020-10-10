@@ -58,11 +58,14 @@ alias grb='git rebase'
 alias gpr='git pull-request -p'
 
 alias grm='git redmine'
+
 alias today="sumContribution 1.day"
 alias week="sumContribution 1.week"
 
 alias d="docker-compose"
 alias dr="docker-compose exec spring bundle exec spring rails"
+
+alias fl="flutter"
 
 alias tp="tmux show-buffer |pbcopy"
 
