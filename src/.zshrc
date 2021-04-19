@@ -57,7 +57,7 @@ alias gdif='git diff'
 alias gg='git grep'
 alias ggn='git grep --name-only'
 alias grb='git rebase'
-alias gpr='git pull-request -p'
+alias gpr='git pull-request --push --browse'
 
 alias grm='git redmine'
 
