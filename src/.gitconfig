@@ -13,6 +13,7 @@
   editor = /usr/bin/vim
   excludesfile = ~/.gitignore_global
   whitespace = trailing-space,space-before-tab
+  quotePath = false
 [apply]
   whitespace = fix 
 [color]
@@ -29,8 +30,11 @@
 [diff]
   compactionHeuristic = true
 [alias]
-	pushf = push --force-with-lease
+  pushf = push --force-with-lease
+  refs = for-each-ref --sort=-committerdate --count=10 refs/heads/
 [hub]
-	protocol = ssh
+  protocol = ssh
 [pull]
-	rebase = true
+  rebase = true
+[grep]
+  extendedRegexp = true
