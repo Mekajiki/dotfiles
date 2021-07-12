@@ -36,6 +36,7 @@ esac
 #
 alias f='fg'
 alias v='vim'
+alias m='make'
 alias ls="ls -Gv"
 #git aliases
 if (( $+commands[hub] )) {
@@ -48,6 +49,7 @@ alias gb='git branch --color'
 alias gco='git checkout'
 alias ga='git add'
 alias gl='git log'
+alias gls='git ls-files | grep'
 alias gc='git commit -v'
 alias gst='git stash'
 alias gpull='git pull'
