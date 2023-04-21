@@ -63,6 +63,8 @@ alias gpr='git pull-request --push --browse'
 
 alias grm='git redmine'
 
+alias ghqg='git get -p'
+
 alias today="sumContribution 1.day"
 alias week="sumContribution 1.week"
 
