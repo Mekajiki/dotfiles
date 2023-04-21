@@ -131,8 +131,9 @@ zstyle ':completion:*' list-colors 'di=36' 'ln=35' 'ex=31' 'bd=37;46' 'cd=36;43'
 
 # z - jump around
 #
-if [[ -f ~/repos/z/z.sh ]] {
-  . $HOME/repos/z/z.sh
+#  . /opt/homebrew/etc/profile.d/z.sh
+if [[ -f /opt/homebrew/etc/profile.d/z.sh ]] {
+  . /opt/homebrew/etc/profile.d/z.sh
   function precmd () {
     _z --add "$(pwd -P)"
   }
