@@ -181,3 +181,13 @@ if [ -f '/Users/mekajiki/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/mekaji
 if [ -f '/Users/mekajiki/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/mekajiki/google-cloud-sdk/completion.zsh.inc'; fi
 [[ `which kubectl` ]] && source <(kubectl completion zsh)
 [[ `which kubectl` ]] && source <(kubectl completion zsh)
+
+## Pet
+# Register the previous command
+function prev() {
+  PREV=$(fc -lrn | head -n 1)
+  sh -c "pet new `printf %q "$PREV"`"
+}
+
+# alias
+alias pe='pet exec'
