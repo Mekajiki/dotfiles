@@ -7,7 +7,6 @@ call vundle#rc()
 " -------------------------------------------------------------
 Bundle 'tpope/vim-rails'
 Bundle 'ervandew/supertab'
-Bundle 'kien/ctrlp.vim'
 Bundle 'tpope/vim-endwise'
 Bundle 'tpope/vim-fugitive'
 Bundle 'tpope/vim-surround'
@@ -18,11 +17,19 @@ Bundle 'derekwyatt/vim-scala'
 Bundle 'tpope/vim-bundler'
 Bundle 'tpope/vim-pathogen'
 Bundle 'slim-template/vim-slim'
+Bundle 'junegunn/fzf'
+Bundle 'junegunn/fzf.vim'
+" Neovim Exclusive Plugins
+" -------------------------------------------------------------
+if has('nvim')
+  Bundle 'github/copilot.vim'
+endif
 " General
 " -------------------------------------------------------------
 set enc=utf-8
 set fileencodings=utf-8,iso-2022-jp,euc-jp,cp932,ucs-bom,default,latin1
 set shell=zsh
+set maxmempattern=8192
 set autoread
 filetype plugin on
 filetype indent on
@@ -123,10 +130,10 @@ augroup Autocmds
 " -------------------------------------------------------------
 set backupdir=/tmp/
 noremap tp :set paste!<CR>
-"" CtrlP
+"" fzf
 " -------------------------------------------------------------
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.class
-let g:ctrlp_custom_ignore = '\v[\/](\.git|\.hg|\.svn|node_modules|build)$'
+nnoremap <C-p> :GFiles<CR>
 " Completion
 " -------------------------------------------------------------
 set history=700
