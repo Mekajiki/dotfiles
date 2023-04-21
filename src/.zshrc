@@ -109,13 +109,7 @@ setopt auto_cd
 #
 setopt extended_glob
 
-# no more escape for git carrets like HEAD^
-#
-if [[ -f ~/repos/zsh-git-escape-magic ]] {
-  fpath=(~/repos/zsh-git-escape-magic ${fpath})
-  autoload -Uz git-escape-magic
-  git-escape-magic
-}
+fpath=(~/.zsh $fpath)
 
 # correct spell miss
 #
