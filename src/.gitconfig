@@ -38,3 +38,5 @@
   rebase = true
 [grep]
   extendedRegexp = true
+[advice]
+	skippedCherryPicks = false
