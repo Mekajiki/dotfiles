@@ -165,9 +165,9 @@ precmd() {
   vcs_info
 
   # set current dir as the name of tmux window
-  if (tmux info &> /dev/null) {
-    tmux set-window-option window-status-format " #I:${PWD:t} " > /dev/null
-  }
+  if [[ -n $TMUX ]]; then
+    tmux rename-window "${PWD:t}" || echo "Failed to set tmux window name"
+  fi
 }
 
 setopt prompt_subst
