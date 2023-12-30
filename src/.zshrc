@@ -5,7 +5,7 @@ export FLEX_HOME=$HOME/sharedItems/flex_sdk_3.5.0.12683
 
 export GOPATH=$HOME/go
 
-export PATH=/usr/local/bin:$PATH
+export PATH=/usr/local/bin:$HOME/bin:$PATH
 export PATH=$HOME/Applications/android-studio/bin:$PATH
 
 sumContribution(){
