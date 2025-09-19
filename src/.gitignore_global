@@ -40,5 +40,6 @@ gradlew.bat
 .devcontainer
 
 .vscode
+.claude
 
 docker-compose.override.yml
