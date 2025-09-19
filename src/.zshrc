@@ -176,13 +176,7 @@ PROMPT='%n'$YELLOW'@%M$os_logo :'$CYAN'%~%$
 ${vcs_info_msg_0_}'$DEFAULT'$ '
 PROMPT2="%_%% "
 
-## Gcloud
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/mekajiki/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/mekajiki/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/mekajiki/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/mekajiki/google-cloud-sdk/completion.zsh.inc'; fi
-[[ `which kubectl` ]] && source <(kubectl completion zsh)
+## Gcloud[[ `which kubectl` ]] && source <(kubectl completion zsh)
 [[ `which kubectl` ]] && source <(kubectl completion zsh)
 
 ## Pet
@@ -198,3 +192,9 @@ alias pe='pet exec'
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/mekajiki/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/mekajiki/Downloads/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/mekajiki/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/mekajiki/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
