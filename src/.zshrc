@@ -68,8 +68,8 @@ alias ghqg='git get -p'
 alias today="sumContribution 1.day"
 alias week="sumContribution 1.week"
 
-alias d="docker-compose"
-alias dr="docker-compose exec server rails"
+alias d="docker compose"
+alias dr="docker compose exec server rails"
 
 alias fl="flutter"
 
