@@ -1,13 +1,3 @@
-export LC_ALL="en_US.UTF-8"
-export LANG="en_JP.UTF-8"
-
-export FLEX_HOME=$HOME/sharedItems/flex_sdk_3.5.0.12683
-
-export GOPATH=$HOME/go
-
-export PATH=/usr/local/bin:$HOME/bin:$PATH
-export PATH=$HOME/Applications/android-studio/bin:$PATH
-
 sumContribution(){
   author=$2
   if [ -z "$author" ]; then author='ii.hsif.drows@gmail.com'; fi
@@ -18,7 +8,6 @@ sumContribution(){
 #by os settings
 case ${OSTYPE} in
   darwin*)
-    export PATH=/opt/homebrew/bin:$PATH
     setopt hist_ignore_dups share_history inc_append_history extended_history
 
     fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
@@ -119,12 +108,10 @@ setopt correct
 
 # RSENSE
 #
-export RSENSE_HOME=$HOME/.vim/rsense
 zstyle :compinstall filename '~/.zshrc'
 
 # About ls command
 #
-export LSCOLORS=gxfxcxdxbxhggdabagacad
 zstyle ':completion:*' list-colors 'di=36' 'ln=35' 'ex=31' 'bd=37;46' 'cd=36;43'
 
 # end About ls command
@@ -189,16 +176,12 @@ function prev() {
 # alias
 alias pe='pet exec'
 
-export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 
 # rbenv
 eval "$(rbenv init - zsh)"
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/mekajiki/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/mekajiki/Downloads/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/mekajiki/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/mekajiki/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
