@@ -1,0 +1,14 @@
+#!/bin/bash
+set -e
+
+GIT_ROOT=$(git rev-parse --show-toplevel)
+CONTEXT_FILE="${GIT_ROOT}/.git/claude-pr-context.txt"
+
+# 通常通りPR作成
+if hub pull-request --push --browse; then
+  # コンテキストファイルがあればコメントとして追加
+  if [[ -f "$CONTEXT_FILE" ]]; then
+    gh pr comment --body "$(cat "$CONTEXT_FILE")"
+    rm "$CONTEXT_FILE"
+  fi
+fi
