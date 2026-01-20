@@ -1,0 +1,20 @@
+#!/bin/bash
+set -e
+
+GIT_ROOT=$(git rev-parse --show-toplevel)
+CONTEXT_FILE="${GIT_ROOT}/.git/claude-pr-context.txt"
+
+# コミットメッセージからテンプレートを生成
+TEMPLATE=$(git log -1 --pretty=format:"%s%n%n%b")
+
+if [[ -f "$CONTEXT_FILE" ]]; then
+  BODY="${TEMPLATE}
+
+---
+$(cat "$CONTEXT_FILE")"
+  rm "$CONTEXT_FILE"
+else
+  BODY="$TEMPLATE"
+fi
+
+echo "$BODY" | hub pull-request --push --browse -F - -e
