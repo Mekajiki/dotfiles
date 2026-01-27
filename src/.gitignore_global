@@ -43,3 +43,5 @@ gradlew.bat
 .claude
 
 docker-compose.override.yml
+
+~$*
