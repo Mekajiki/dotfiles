@@ -13,19 +13,10 @@
 
 ```bash
 # 初回
-cat > "$(git rev-parse --show-toplevel)/.git/claude-pr-context.txt" << 'EOF'
-# 🗣️ Plan中に与えたプロンプト
-
-💬 ユーザーの発言1
-EOF
+printf '# 🗣️ Claudeに与えたプロンプト\n\n💬 ユーザーの発言1\n' > "$(git rev-parse --show-toplevel)/.git/claude-pr-context.txt"
 
 # 2回目以降（追記）
-cat >> "$(git rev-parse --show-toplevel)/.git/claude-pr-context.txt" << 'EOF'
-
----
-
-💬 ユーザーの発言2
-EOF
+printf '\n---\n\n💬 ユーザーの発言2\n' >> "$(git rev-parse --show-toplevel)/.git/claude-pr-context.txt"
 ```
 
 ### PR作成時
