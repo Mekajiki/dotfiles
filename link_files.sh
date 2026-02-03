@@ -12,3 +12,4 @@ ln -sfn $base_dir/pull_request_with_prompt $HOME/bin/
 # Link Claude Code config
 mkdir -p $HOME/.claude
 ln -sfn $base_dir/CLAUDE.md $HOME/.claude/
+ln -sfn $base_dir/claude-settings.json $HOME/.claude/settings.json
