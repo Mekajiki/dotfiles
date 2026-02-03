@@ -1,3 +1,9 @@
 {
-  "alwaysThinkingEnabled": true
+  "alwaysThinkingEnabled": true,
+  "permissions": {
+    "allow": [
+      "Bash(printf * >> */.git/claude-pr-context.txt)",
+      "Bash(printf * > */.git/claude-pr-context.txt)"
+    ]
+  }
 }
