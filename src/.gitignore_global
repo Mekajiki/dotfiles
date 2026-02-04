@@ -41,6 +41,7 @@ gradlew.bat
 
 .vscode
 .claude
+claude-pr-context.txt
 
 docker-compose.override.yml
 
