@@ -1,6 +1,7 @@
 - Commit title message always should be what's is achieved by the change, not what the change is. Describe why you make the change below the title only when the change might be hard to understand.
 - コミットは常に許可を求めろや
 
+# プランのファイルへの記録
 ## ユーザー発言の記録
 
 プランモード・実装モード問わず、ユーザーが発言するたびに `claude-pr-context.txt` へ追記する。
@@ -16,3 +17,6 @@ printf '# 🗣️ Claudeに与えたプロンプト\n\n💬 ユーザーの発�
 # 2回目以降（追記）
 printf '\n---\n\n💬 ユーザーの発言2\n' >> claude-pr-context.txt
 ```
+
+## プランファイルの記録
+プランモードを抜けたタイミングで，claude-pr-context.txtにプランファイルのセクションを設け，プランを追記する．
