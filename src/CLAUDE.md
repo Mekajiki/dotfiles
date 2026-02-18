@@ -6,16 +6,17 @@
 
 プランモード・実装モード問わず、ユーザーが発言するたびに `claude-pr-context.txt` へ追記する。
 
-- 最初の発言時にファイルを作成し、見出し `# 🗣️ Claudeに与えたプロンプト` を書く
+- `claude-pr-context.txt` が存在しないか空なら、見出し付きで新規作成する
+- 既に内容があれば `---` 区切りで追記する
 - 各発言の先頭に `💬` を付ける
-- 発言間は `---` で区切る
 
 ```bash
-# 初回
-printf '# 🗣️ Claudeに与えたプロンプト\n\n💬 ユーザーの発言1\n' > claude-pr-context.txt
-
-# 2回目以降（追記）
-printf '\n---\n\n💬 ユーザーの発言2\n' >> claude-pr-context.txt
+# ファイルが存在しないか空なら初回扱い
+if [ ! -s claude-pr-context.txt ]; then
+  printf '# 🗣️ Claudeに与えたプロンプト\n\n💬 ユーザーの発言\n' > claude-pr-context.txt
+else
+  printf '\n---\n\n💬 ユーザーの発言\n' >> claude-pr-context.txt
+fi
 ```
 
 ## プランファイルの記録
