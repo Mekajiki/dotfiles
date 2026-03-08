@@ -1,5 +1,4 @@
 {
-  "alwaysThinkingEnabled": true,
   "permissions": {
     "allow": [
       "Bash(printf *)",
@@ -7,5 +6,7 @@
       "Bash(git diff *)",
       "Bash(git show *)"
     ]
-  }
+  },
+  "alwaysThinkingEnabled": true,
+  "effortLevel": "high"
 }
