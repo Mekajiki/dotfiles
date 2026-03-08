@@ -1,10 +1,10 @@
 {
-  "alwaysThinkingEnabled": true,
   "permissions": {
     "allow": [
       "Bash(printf *)",
       "Bash(git:*)",
       "Bash(gh:*)"
     ]
-  }
+  },
+  "alwaysThinkingEnabled": true
 }
