@@ -3,9 +3,8 @@
   "permissions": {
     "allow": [
       "Bash(printf *)",
-      "Bash(git log *)",
-      "Bash(git diff *)",
-      "Bash(git show *)"
+      "Bash(git:*)",
+      "Bash(gh:*)"
     ]
   }
 }
