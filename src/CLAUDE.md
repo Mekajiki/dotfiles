@@ -1,3 +1,4 @@
 - Commit title message always should be what's is achieved by the change, not what the change is. Describe why you make the change below the title only when the change might be hard to understand.
 - コミットは常に許可を求めろや
 - git commitのメッセージは `$()` を使わず `-m "message"` で直接渡すこと（`$()` はBashツールの承認が毎回必要になるため）
+- 本来エラーになるべき箇所でnullチェックして握りつぶすような過剰なエラー処理をしない。設定ミスやバグは早期に気付けるようにする。
