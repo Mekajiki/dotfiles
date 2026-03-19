@@ -153,7 +153,7 @@ precmd() {
 
   # set current dir as the name of tmux window
   if [[ -n $TMUX ]]; then
-    tmux rename-window "${PWD:t}" || echo "Failed to set tmux window name"
+    tmux rename-window -t "$TMUX_PANE" "${PWD:t}" || echo "Failed to set tmux window name"
   fi
 }
 
