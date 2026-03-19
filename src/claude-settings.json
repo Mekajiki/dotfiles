@@ -3,7 +3,9 @@
     "allow": [
       "Bash(printf *)",
       "Bash(git:*)",
-      "Bash(gh:*)"
+      "Bash(gh:*)",
+      "Bash(docker:*)",
+      "Bash(docker compose:*)"
     ]
   },
   "alwaysThinkingEnabled": true,
