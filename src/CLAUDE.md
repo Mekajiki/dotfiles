@@ -1,4 +1,4 @@
 - Commit title message always should be what's is achieved by the change, not what the change is. Describe why you make the change below the title only when the change might be hard to understand.
 - コミットは常に許可を求めろや
-- git commitのメッセージは `$()` を使わず `-m "message"` で直接渡すこと（`$()` はBashツールの承認が毎回必要になるため）
+- Bashツールで `$()` を使わないこと（毎回承認が必要になるため）。git commitは `-m "message"` で、gh pr createの--bodyも直接文字列で渡す。git pushとgh pr createは別々のコマンドとして実行する。
 - 本来エラーになるべき箇所でnullチェックして握りつぶすような過剰なエラー処理をしない。設定ミスやバグは早期に気付けるようにする。
