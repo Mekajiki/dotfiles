@@ -6,5 +6,6 @@
       "Bash(gh:*)"
     ]
   },
-  "alwaysThinkingEnabled": true
+  "alwaysThinkingEnabled": true,
+  "enableRemoteControl": true
 }
