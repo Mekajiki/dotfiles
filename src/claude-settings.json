@@ -5,9 +5,14 @@
       "Bash(git:*)",
       "Bash(gh:*)",
       "Bash(docker:*)",
-      "Bash(docker compose:*)"
+      "Bash(docker compose:*)",
+      "WebSearch",
+      "WebFetch"
     ]
   },
   "alwaysThinkingEnabled": true,
-  "enableRemoteControl": true
+  "enableRemoteControl": true,
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true
+  }
 }
