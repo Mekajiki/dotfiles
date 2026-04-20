@@ -184,4 +184,4 @@ alias pe='pet exec'
 eval "$(rbenv init - zsh)"
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/Users/mekajiki/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/mekajiki/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f '/usr/local/lib/google-cloud-sdk/completion.zsh.inc' ]; then . '/usr/local/lib/google-cloud-sdk/completion.zsh.inc'; fi
