@@ -46,8 +46,55 @@ install_packages_macos() {
       "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
   log "Installing brew formulae"
-  local formulae=(zsh tmux vim git coreutils)
+  local formulae=(zsh tmux vim git ghq coreutils z)
   brew install "${formulae[@]}" || true
+}
+
+# ---------------------------------------------------------------------------
+# ghq (binary release on Linux; brew handles macOS)
+# ---------------------------------------------------------------------------
+install_ghq_linux() {
+  [ "$OS" = linux ] || return 0
+  if command -v ghq >/dev/null || [ -x "$HOME/.local/bin/ghq" ]; then
+    log "ghq already installed"
+    return
+  fi
+  log "Installing ghq from GitHub release"
+  local arch
+  case "$(uname -m)" in
+    x86_64) arch=amd64 ;;
+    aarch64|arm64) arch=arm64 ;;
+    *) warn "Unsupported arch: $(uname -m); skipping ghq"; return 0 ;;
+  esac
+  local tmpdir
+  tmpdir="$(mktemp -d)"
+  trap 'rm -rf "$tmpdir"' RETURN
+  local url
+  url="$(curl -fsSL https://api.github.com/repos/x-motemen/ghq/releases/latest \
+    | grep -oE "\"browser_download_url\": *\"[^\"]+linux_${arch}\\.zip\"" \
+    | head -1 | sed -E 's/.*"(https:[^"]+)".*/\1/')"
+  if [ -z "$url" ]; then
+    warn "Could not determine ghq download URL; skipping"
+    return 0
+  fi
+  curl -fsSL -o "$tmpdir/ghq.zip" "$url"
+  (cd "$tmpdir" && unzip -q ghq.zip)
+  mkdir -p "$HOME/.local/bin"
+  install -m 0755 "$tmpdir"/ghq_linux_*/ghq "$HOME/.local/bin/ghq"
+  log "ghq -> $HOME/.local/bin/ghq"
+}
+
+# ---------------------------------------------------------------------------
+# rupa/z via ghq (sourced from .zshrc on Linux)
+# ---------------------------------------------------------------------------
+install_z() {
+  local target="$HOME/ghq/github.com/rupa/z"
+  if [ -d "$target/.git" ]; then
+    log "rupa/z already cloned"
+    return
+  fi
+  log "Cloning rupa/z via ghq"
+  PATH="$HOME/.local/bin:$PATH" ghq get rupa/z
 }
 
 # ---------------------------------------------------------------------------
@@ -76,11 +123,13 @@ main() {
     linux)
       install_packages_linux
       setup_locale
+      install_ghq_linux
       ;;
     macos)
       install_packages_macos
       ;;
   esac
+  install_z
   link_dotfiles
 
   log "Done. Open a new shell or run: exec zsh"
