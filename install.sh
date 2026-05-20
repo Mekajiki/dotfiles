@@ -161,6 +161,22 @@ link_dotfiles() {
 }
 
 # ---------------------------------------------------------------------------
+# Vundle + plugin install (.vimrc expects rtp+=~/.vim/vundle)
+# ---------------------------------------------------------------------------
+setup_vim_plugins() {
+  if [ -d "$HOME/.vim/vundle/.git" ]; then
+    log "Vundle already cloned"
+  else
+    log "Cloning Vundle (rtp path matches .vimrc: ~/.vim/vundle)"
+    git clone --depth=1 https://github.com/VundleVim/Vundle.vim.git \
+      "$HOME/.vim/vundle"
+  fi
+  log "Running :PluginInstall (headless)"
+  vim +PluginInstall +qall >/dev/null 2>&1 || \
+    warn ":PluginInstall reported errors (often harmless on first run)"
+}
+
+# ---------------------------------------------------------------------------
 # Run
 # ---------------------------------------------------------------------------
 main() {
@@ -179,6 +195,7 @@ main() {
   esac
   install_z
   link_dotfiles
+  setup_vim_plugins
 
   log "Done. Open a new shell or run: exec zsh"
 }
