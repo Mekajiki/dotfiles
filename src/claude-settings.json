@@ -15,6 +15,6 @@
   },
   "alwaysThinkingEnabled": true,
   "enableRemoteControl": true,
-  "theme": "dark-daltonized"
+  "theme": "dark-daltonized",
   "remoteControlAtStartup": false
 }
