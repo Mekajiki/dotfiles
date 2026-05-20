@@ -16,4 +16,5 @@
   "alwaysThinkingEnabled": true,
   "enableRemoteControl": true,
   "theme": "dark-daltonized"
+  "remoteControlAtStartup": false
 }
