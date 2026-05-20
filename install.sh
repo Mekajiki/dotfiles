@@ -111,9 +111,6 @@ install_ghq_linux() {
     aarch64|arm64) arch=arm64 ;;
     *) warn "Unsupported arch: $(uname -m); skipping ghq"; return 0 ;;
   esac
-  local tmpdir
-  tmpdir="$(mktemp -d)"
-  trap 'rm -rf "$tmpdir"' RETURN
   local url
   url="$(curl -fsSL https://api.github.com/repos/x-motemen/ghq/releases/latest \
     | grep -oE "\"browser_download_url\": *\"[^\"]+linux_${arch}\\.zip\"" \
@@ -122,10 +119,13 @@ install_ghq_linux() {
     warn "Could not determine ghq download URL; skipping"
     return 0
   fi
+  local tmpdir
+  tmpdir="$(mktemp -d)"
   curl -fsSL -o "$tmpdir/ghq.zip" "$url"
   (cd "$tmpdir" && unzip -q ghq.zip)
   mkdir -p "$HOME/.local/bin"
   install -m 0755 "$tmpdir"/ghq_linux_*/ghq "$HOME/.local/bin/ghq"
+  rm -rf "$tmpdir"
   log "ghq -> $HOME/.local/bin/ghq"
 }
 
