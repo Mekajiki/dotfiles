@@ -46,8 +46,53 @@ install_packages_macos() {
       "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
   log "Installing brew formulae"
-  local formulae=(zsh tmux vim git ghq coreutils z)
+  local formulae=(zsh tmux vim git ghq rbenv ruby-build nvm coreutils z)
   brew install "${formulae[@]}" || true
+}
+
+# ---------------------------------------------------------------------------
+# Ruby build deps (apt) - needed for rbenv install <version>
+# ---------------------------------------------------------------------------
+install_ruby_build_deps_linux() {
+  [ "$OS" = linux ] || return 0
+  log "Installing Ruby build deps"
+  sudo apt-get install -y \
+    libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev \
+    libncurses-dev libffi-dev liblzma-dev libyaml-dev
+}
+
+# ---------------------------------------------------------------------------
+# rbenv + ruby-build (Linux; macOS uses brew)
+# ---------------------------------------------------------------------------
+install_rbenv_linux() {
+  [ "$OS" = linux ] || return 0
+  if [ -d "$HOME/.rbenv/.git" ]; then
+    log "rbenv already cloned"
+  else
+    log "Cloning rbenv"
+    git clone --depth=1 https://github.com/rbenv/rbenv.git "$HOME/.rbenv"
+  fi
+  if [ -d "$HOME/.rbenv/plugins/ruby-build/.git" ]; then
+    log "ruby-build already cloned"
+  else
+    log "Cloning ruby-build"
+    git clone --depth=1 https://github.com/rbenv/ruby-build.git \
+      "$HOME/.rbenv/plugins/ruby-build"
+  fi
+}
+
+# ---------------------------------------------------------------------------
+# nvm (Linux; macOS uses brew)
+# ---------------------------------------------------------------------------
+install_nvm_linux() {
+  [ "$OS" = linux ] || return 0
+  if [ -s "$HOME/.nvm/nvm.sh" ]; then
+    log "nvm already installed"
+    return
+  fi
+  log "Installing nvm"
+  PROFILE=/dev/null bash -c \
+    "curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash"
 }
 
 # ---------------------------------------------------------------------------
@@ -124,6 +169,9 @@ main() {
       install_packages_linux
       setup_locale
       install_ghq_linux
+      install_ruby_build_deps_linux
+      install_rbenv_linux
+      install_nvm_linux
       ;;
     macos)
       install_packages_macos
