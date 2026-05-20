@@ -161,6 +161,28 @@ link_dotfiles() {
 }
 
 # ---------------------------------------------------------------------------
+# Default shell -> zsh
+# ---------------------------------------------------------------------------
+set_default_shell() {
+  local zsh_path
+  zsh_path="$(command -v zsh || true)"
+  if [ -z "$zsh_path" ]; then
+    warn "zsh not found; skipping chsh"
+    return
+  fi
+  if [ "${SHELL:-}" = "$zsh_path" ]; then
+    log "Default shell already zsh"
+    return
+  fi
+  if ! grep -qxF "$zsh_path" /etc/shells; then
+    log "Adding $zsh_path to /etc/shells"
+    echo "$zsh_path" | sudo tee -a /etc/shells >/dev/null
+  fi
+  log "Changing default shell to zsh (you may be prompted for password)"
+  chsh -s "$zsh_path" || warn "chsh failed; you can run it later"
+}
+
+# ---------------------------------------------------------------------------
 # Vundle + plugin install (.vimrc expects rtp+=~/.vim/vundle)
 # ---------------------------------------------------------------------------
 setup_vim_plugins() {
@@ -196,6 +218,7 @@ main() {
   install_z
   link_dotfiles
   setup_vim_plugins
+  set_default_shell
 
   log "Done. Open a new shell or run: exec zsh"
 }
