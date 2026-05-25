@@ -44,6 +44,28 @@ OSを自動判定 (`macOS` / `Linux` / `WSL2`) し、冪等に以下を実行：
 
 途中で `sudo` パスワードや `chsh` 用パスワードを聞かれる箇所があります。
 
+## install.sh がやらないこと（手作業）
+
+「個人 × ホスト」固有の操作は意図的にスクリプト化していない。
+新規マシンを実用状態に持っていくときの手順メモ：
+
+- **SSH 鍵の生成と GitHub 登録**
+  ```sh
+  ssh-keygen -t ed25519 -C "$(whoami)+$(hostname)" -f ~/.ssh/id_ed25519 -N ""
+  gh ssh-key add ~/.ssh/id_ed25519.pub --title "$(hostname)"
+  # 既存clone済みrepoはSSHに切替
+  git remote set-url origin git@github.com:Mekajiki/dotfiles.git
+  ```
+  `gh` を使うには別マシンで `admin:public_key` スコープ持ちの `gh auth login` 済みであることが前提。
+- **言語ランタイムの具体バージョン**
+  ```sh
+  rbenv install 3.3.6 && rbenv global 3.3.6
+  nvm install --lts
+  ```
+- **Claude Code CLI のログイン**（`/login`）
+- **gcloud / kubectl などのクラウド系**（必要なら個別に）
+- **WSL 限定の事前作業**: `%UserProfile%\.wslconfig` に `[wsl2] networkingMode=mirrored` を入れて `wsl --shutdown`。これをやらないと Tailscale 経由の SSH が PMTU 起因でハングする。
+
 ## 個別ファイル
 
 - `link_files.sh` — dotfiles を `$HOME` に symlink する単独実行用スクリプト（`install.sh` から呼ばれる）
