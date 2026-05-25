@@ -21,6 +21,12 @@ case ${OSTYPE} in
       ;;
 esac
 
+# rbenv: 公式の git-clone 方式インストール時の bin を PATH に通す。
+# brew の rbenv (macOS) は既に /opt/homebrew/bin で拾われているので不要。
+if [ -d "$HOME/.rbenv/bin" ]; then
+  export PATH="$HOME/.rbenv/bin:$PATH"
+fi
+
 # RSENSE
 #
 export RSENSE_HOME=$HOME/.vim/rsense

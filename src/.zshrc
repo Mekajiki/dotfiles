@@ -15,8 +15,14 @@ case ${OSTYPE} in
       ;;
   linux*)
     setopt hist_ignore_dups share_history inc_append_history
-    alias pbcopy='xclip -selection clipboard'
-    alias pbpaste='xclip -selection clipboard -o'
+    if [[ -n $WSL_DISTRO_NAME ]] || grep -qiE '(microsoft|wsl)' /proc/version 2>/dev/null; then
+      # WSL: bridge to the Windows clipboard so pbcopy/pbpaste work without WSLg/X.
+      alias pbcopy='clip.exe'
+      alias pbpaste="powershell.exe -NoProfile -Command Get-Clipboard | sed -e 's/\r\$//'"
+    else
+      alias pbcopy='xclip -selection clipboard'
+      alias pbpaste='xclip -selection clipboard -o'
+    fi
     os_logo="🐧"
       ;;
 esac
@@ -118,13 +124,20 @@ zstyle ':completion:*' list-colors 'di=36' 'ln=35' 'ex=31' 'bd=37;46' 'cd=36;43'
 
 # z - jump around
 #
-#  . /opt/homebrew/etc/profile.d/z.sh
-if [[ -f /opt/homebrew/etc/profile.d/z.sh ]] {
-  . /opt/homebrew/etc/profile.d/z.sh
-  function precmd () {
-    _z --add "$(pwd -P)"
-  }
-}
+# brewインストールならprofile.d配下、Linux/WSLではghqでcloneしたrupa/zを使う。
+for _z_candidate in \
+  /opt/homebrew/etc/profile.d/z.sh \
+  /usr/local/etc/profile.d/z.sh \
+  $HOME/ghq/github.com/rupa/z/z.sh; do
+  if [[ -f $_z_candidate ]]; then
+    . $_z_candidate
+    function precmd () {
+      _z --add "$(pwd -P)"
+    }
+    break
+  fi
+done
+unset _z_candidate
 
 # Prompt
 #
