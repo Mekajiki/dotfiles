@@ -76,5 +76,5 @@ OSを自動判定 (`macOS` / `Linux` / `WSL2`) し、冪等に以下を実行：
 - `src/` — 配布対象の dotfiles
 - `src/claude-settings.json.example` — `~/.claude/settings.json` の初期値。Claude Code が随時書き換えるため symlink せず、初回のみコピーする
 - `src/CLAUDE.md` — Claude Code 用のグローバル指示
-- `src/.claude/hooks/` — Claude Code の SessionStart / SessionEnd で動かすシェルスクリプト（worktree 自動掃除など）
+- `src/claude-hooks/` — Claude Code の SessionStart / SessionEnd で動かすシェルスクリプト（worktree 自動掃除など）
 - `docs/` — 設計文書
