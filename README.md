@@ -70,5 +70,5 @@ OSを自動判定 (`macOS` / `Linux` / `WSL2`) し、冪等に以下を実行：
 
 - `link_files.sh` — dotfiles を `$HOME` に symlink する単独実行用スクリプト（`install.sh` から呼ばれる）
 - `src/` — 配布対象の dotfiles
-- `src/claude-settings.json` — `~/.claude/settings.json` の中身
+- `src/claude-settings.json.example` — `~/.claude/settings.json` の初期値。Claude Code が随時書き換えるため symlink せず、初回のみコピーする
 - `src/CLAUDE.md` — Claude Code 用のグローバル指示

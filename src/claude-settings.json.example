@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(printf *)",
+      "Bash(git:*)",
+      "Bash(gh:*)",
+      "Bash(docker:*)",
+      "Bash(docker compose:*)",
+      "WebSearch",
+      "WebFetch"
+    ]
+  },
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true,
+    "modern-web-guidance@googlechrome": true
+  },
+  "extraKnownMarketplaces": {
+    "googlechrome": {
+      "source": {
+        "source": "github",
+        "repo": "GoogleChrome/modern-web-guidance"
+      },
+      "autoUpdate": true
+    }
+  },
+  "alwaysThinkingEnabled": true,
+  "theme": "dark-daltonized",
+  "remoteControlAtStartup": false,
+  "enableRemoteControl": true
+}
