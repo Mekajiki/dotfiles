@@ -11,6 +11,13 @@ ln -sfn $base_dir/.[a-z]* ./
 mkdir -p $HOME/.claude
 ln -sfn $base_dir/CLAUDE.md $HOME/.claude/
 
+# Claude Code hooks
+mkdir -p $HOME/.claude/hooks
+for hook in $base_dir/claude-hooks/*.sh; do
+  [ -e "$hook" ] || continue
+  ln -sfn "$hook" $HOME/.claude/hooks/
+done
+
 # settings.json は Claude が随時書き換えるので symlink せず、
 # 初回 (or 過去の symlink が残っている場合) だけ .example からコピーする。
 settings="$HOME/.claude/settings.json"
