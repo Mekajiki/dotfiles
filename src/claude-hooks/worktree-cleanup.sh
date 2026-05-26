@@ -25,13 +25,12 @@ git -C "$repo_root" worktree list --porcelain \
       fi
       (
         cd "$wt" || exit 0
-        [ -f compose.worktree.yml ] || exit 0
-        base=""
         for f in compose.yml compose.yaml docker-compose.yml docker-compose.yaml; do
-          if [ -f "$f" ]; then base=$f; break; fi
+          if [ -f "$f" ]; then
+            docker compose down -v --remove-orphans 2>/dev/null
+            break
+          fi
         done
-        [ -z "$base" ] && exit 0
-        docker compose -f "$base" -f compose.worktree.yml down -v --remove-orphans 2>/dev/null
       )
       git -C "$repo_root" worktree remove --force "$wt"
       git -C "$repo_root" branch -D "$branch" 2>/dev/null

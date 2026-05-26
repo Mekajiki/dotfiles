@@ -1,8 +1,9 @@
 #!/bin/sh
 # Claude が EnterWorktree で .claude/worktrees/<branch>/ に入った直後に呼ぶ想定。
-# 当該 worktree に compose.worktree.yml を生成し、host port と
-# docker compose project 名を branch ベースで決定的に分離する。
+# 当該 worktree に compose.override.yml (auto-load 名) を生成し、
+# host port と docker compose project 名を branch ベースで決定的に分離する。
 # branch 名は cwd の basename から導出。
+# auto-load 名にすることで `make up` や bare `docker compose up` でも override が効く。
 set -e
 
 cwd=`pwd`
@@ -37,47 +38,63 @@ mailcatcher_port=$(( 21000 + (hash % 1000) ))
 yard_port=$(( 22000 + (hash % 1000) ))
 chrome_vnc_port=$(( 23000 + (hash % 1000) ))
 
-# base compose の有無を確認
+# base compose を検出し、対応する auto-load override 名を決める
 base=""
-for f in compose.yml compose.yaml docker-compose.yml docker-compose.yaml; do
-  if [ -f "$f" ]; then
-    base=$f
+override=""
+set -- \
+  compose.yml         compose.override.yml \
+  compose.yaml        compose.override.yaml \
+  docker-compose.yml  docker-compose.override.yml \
+  docker-compose.yaml docker-compose.override.yaml
+while [ $# -ge 2 ]; do
+  if [ -f "$1" ]; then
+    base=$1
+    override=$2
     break
   fi
+  shift 2
 done
 if [ -z "$base" ]; then
   echo "cl-setup: no compose file in $cwd, skipping override generation." >&2
   exit 0
 fi
 
-# anipos 慣習 (service: server/mailcatcher/yard/chrome) を host port 分離する override。
-# port と project 名はリテラル埋め込み (env 渡し不要)。
-# 合致しない service は base に無いと docker compose 実行時にエラーになる。
-cat > compose.worktree.yml <<EOF
-name: ${repo_name}-${branch}
-services:
-  server:
-    ports: !override
-      - "${server_port}:3000"
-  mailcatcher:
-    ports: !override
-      - "${mailcatcher_port}:1080"
-  yard:
-    ports: !override
-      - "${yard_port}:8808"
-  chrome:
-    ports: !override
-      - "${chrome_vnc_port}:5900"
-EOF
+# base に存在する service だけ override する (存在しない service を書くと
+# compose が "service has neither image nor build context" でエラーになる)
+existing=`docker compose -f "$base" config --services 2>/dev/null`
 
-cat <<EOF
-cl-setup: compose.worktree.yml generated.
-  project: ${repo_name}-${branch}
-  server (Rails):  http://localhost:${server_port}
-  mailcatcher:     http://localhost:${mailcatcher_port}
-  yard:            http://localhost:${yard_port}
-  chrome VNC:      vnc://localhost:${chrome_vnc_port}
+has_service() {
+  echo "$existing" | grep -qx "$1"
+}
 
-Use both files together:
-  docker compose -f ${base} -f compose.worktree.yml up -d
+emit_service() {
+  name=$1
+  host_port=$2
+  target_port=$3
+  if has_service "$name"; then
+    cat <<EOF
+  $name:
+    ports: !override
+      - "${host_port}:${target_port}"
 EOF
+  fi
+}
+
+{
+  echo "name: ${repo_name}-${branch}"
+  echo "services:"
+  emit_service server      "$server_port"      3000
+  emit_service mailcatcher "$mailcatcher_port" 1080
+  emit_service yard        "$yard_port"        8808
+  emit_service chrome      "$chrome_vnc_port"  5900
+} > "$override"
+
+# 出力 (Claude / 人間向けに port をサマリ)
+echo "cl-setup: $override generated (auto-loaded by docker compose)."
+echo "  project: ${repo_name}-${branch}"
+has_service server      && echo "  server (Rails):  http://localhost:${server_port}"
+has_service mailcatcher && echo "  mailcatcher:     http://localhost:${mailcatcher_port}"
+has_service yard        && echo "  yard:            http://localhost:${yard_port}"
+has_service chrome      && echo "  chrome VNC:      vnc://localhost:${chrome_vnc_port}"
+echo
+echo "Run with: docker compose up -d   (or 'make up')"
