@@ -4,3 +4,4 @@
 - 本来エラーになるべき箇所でnullチェックして握りつぶすような過剰なエラー処理をしない。設定ミスやバグは早期に気付けるようにする。
 - `gh pr create` の本文に `## Test plan` のチェックボックス形式セクションを書かない。テストでカバーした内容に言及するなら単純な箇条書きで書き、特になければ省略する。
 - ユーザーが貼り付けた絶対パスがローカルに存在しなかった場合、SSH 接続元のホームディレクトリが sshfs で `~/m2pro/` と `~/hammurabi/` にマウントされている可能性があるため、そちらも確認する。m2pro と hammurabi は Mac なのでホームディレクトリは `/Users/mekajiki/` で、これが `~/m2pro/` および `~/hammurabi/` に対応する。例えば `/Users/mekajiki/Downloads/foo.png` が貼り付けられた場合は `~/m2pro/Downloads/foo.png` や `~/hammurabi/Downloads/foo.png` を試す。Linux 側のホームパス（`/home/mekajiki/...`）が見つからない場合も、ホーム以下の相対パスを `~/m2pro/` `~/hammurabi/` 配下に当てて探す。マウントポイント自体が存在しないホスト（接続元がそのホストでない場合）はスキップする。
+- `EnterWorktree` を使った直後は必ず `bash ~/.claude/hooks/cl-setup.sh` を実行する。`compose.override.yml` (auto-load 名) が生成され host port と docker compose project 名が他 worktree と分離される。`make up` や `docker compose up` をそのまま叩けば override が反映される。compose を持たないリポではスクリプト側で skip される。詳細は dotfiles の `docs/claude-worktree.md`。

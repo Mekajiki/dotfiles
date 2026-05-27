@@ -66,9 +66,15 @@ OSを自動判定 (`macOS` / `Linux` / `WSL2`) し、冪等に以下を実行：
 - **gcloud / kubectl などのクラウド系**（必要なら個別に）
 - **WSL 限定の事前作業**: `%UserProfile%\.wslconfig` に `[wsl2] networkingMode=mirrored` を入れて `wsl --shutdown`。これをやらないと Tailscale 経由の SSH が PMTU 起因でハングする。
 
+## Claude Code 並行作業
+
+同一リポで複数の Claude セッションを並行させるための `cl` コマンドと自動掃除フックを提供。詳細は [`docs/claude-worktree.md`](docs/claude-worktree.md)。
+
 ## 個別ファイル
 
 - `link_files.sh` — dotfiles を `$HOME` に symlink する単独実行用スクリプト（`install.sh` から呼ばれる）
 - `src/` — 配布対象の dotfiles
-- `src/claude-settings.json.example` — `~/.claude/settings.json` の初期値。Claude Code が随時書き換えるため symlink せず、初回のみコピーする
+- `src/claude-settings.local.json` — `~/.claude/settings.local.json` に symlink。Claude Code 本体が書き込まないため symlink 可、permissions / enabledPlugins / theme / hooks など dotfiles で同期したい設定をすべてここに置く（`settings.json` と Claude Code 側でマージされる）
 - `src/CLAUDE.md` — Claude Code 用のグローバル指示
+- `src/claude-hooks/` — Claude Code の SessionStart / SessionEnd で動かすシェルスクリプト（worktree 自動掃除など）
+- `docs/` — 設計文書
