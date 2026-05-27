@@ -18,14 +18,8 @@ for hook in $base_dir/claude-hooks/*.sh; do
   ln -sfn "$hook" $HOME/.claude/hooks/
 done
 
-# settings.json は Claude が随時書き換えるので symlink せず、
-# 初回 (or 過去の symlink が残っている場合) だけ .example からコピーする。
-settings="$HOME/.claude/settings.json"
-if [ -L "$settings" ] || [ ! -e "$settings" ]; then
-  rm -f "$settings"
-  cp "$base_dir/claude-settings.json.example" "$settings"
-fi
-
 # settings.local.json は Claude 本体が書き込まないので symlink して dotfiles から管理する。
-# hooks のような「dotfiles で同期したい」設定はここに置く。settings.json と配列マージされる。
+# permissions / enabledPlugins / hooks 等の dotfiles で同期したい設定はここに置く。
+# settings.json と Claude Code 側でマージされ、scalar は settings.local が優先、
+# array は連結+重複排除、object は deep merge される。
 ln -sfn "$base_dir/claude-settings.local.json" "$HOME/.claude/settings.local.json"
