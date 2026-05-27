@@ -1,0 +1,18 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          { "type": "command", "command": "${HOME}/.claude/hooks/worktree-cleanup.sh" }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          { "type": "command", "command": "${HOME}/.claude/hooks/worktree-session-end.sh" }
+        ]
+      }
+    ]
+  }
+}

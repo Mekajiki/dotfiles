@@ -25,3 +25,7 @@ if [ -L "$settings" ] || [ ! -e "$settings" ]; then
   rm -f "$settings"
   cp "$base_dir/claude-settings.json.example" "$settings"
 fi
+
+# settings.local.json は Claude 本体が書き込まないので symlink して dotfiles から管理する。
+# hooks のような「dotfiles で同期したい」設定はここに置く。settings.json と配列マージされる。
+ln -sfn "$base_dir/claude-settings.local.json" "$HOME/.claude/settings.local.json"
