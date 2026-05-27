@@ -3,3 +3,4 @@
 - Bashツールで `$()` を使わないこと（毎回承認が必要になるため）。git commitは `-m "message"` で、gh pr createの--bodyも直接文字列で渡す。git pushとgh pr createは別々のコマンドとして実行する。
 - 本来エラーになるべき箇所でnullチェックして握りつぶすような過剰なエラー処理をしない。設定ミスやバグは早期に気付けるようにする。
 - `gh pr create` の本文に `## Test plan` のチェックボックス形式セクションを書かない。テストでカバーした内容に言及するなら単純な箇条書きで書き、特になければ省略する。
+- ユーザーが貼り付けた絶対パスがローカルに存在しなかった場合、SSH 接続元のホームディレクトリが sshfs で `~/m2pro/` と `~/hammurabi/` にマウントされている可能性があるため、そちらも確認する。m2pro と hammurabi は Mac なのでホームディレクトリは `/Users/mekajiki/` で、これが `~/m2pro/` および `~/hammurabi/` に対応する。例えば `/Users/mekajiki/Downloads/foo.png` が貼り付けられた場合は `~/m2pro/Downloads/foo.png` や `~/hammurabi/Downloads/foo.png` を試す。Linux 側のホームパス（`/home/mekajiki/...`）が見つからない場合も、ホーム以下の相対パスを `~/m2pro/` `~/hammurabi/` 配下に当てて探す。マウントポイント自体が存在しないホスト（接続元がそのホストでない場合）はスキップする。
