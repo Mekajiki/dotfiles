@@ -74,6 +74,7 @@ OSを自動判定 (`macOS` / `Linux` / `WSL2`) し、冪等に以下を実行：
 
 - `link_files.sh` — dotfiles を `$HOME` に symlink する単独実行用スクリプト（`install.sh` から呼ばれる）
 - `src/` — 配布対象の dotfiles
+- `src/ghostty/config.ghostty` — `~/.config/ghostty/config.ghostty` に symlink。Ghostty の設定（XDG パスなので mac/Linux 共通、`config.ghostty` は 1.2.3 以降の正式名）
 - `src/claude-settings.local.json` — `~/.claude/settings.local.json` に symlink。Claude Code 本体が書き込まないため symlink 可、permissions / enabledPlugins / theme / hooks など dotfiles で同期したい設定をすべてここに置く（`settings.json` と Claude Code 側でマージされる）
 - `src/CLAUDE.md` — Claude Code 用のグローバル指示
 - `src/claude-hooks/` — Claude Code の SessionStart / SessionEnd で動かすシェルスクリプト（worktree 自動掃除など）

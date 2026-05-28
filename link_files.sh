@@ -7,6 +7,10 @@ ln -sfn $base_dir/.[a-z]* ./
 
 
 
+# Ghostty config (config.ghostty は 1.2.3 以降の正式名。XDG パスなら mac/Linux 共通)
+mkdir -p $HOME/.config/ghostty
+ln -sfn $base_dir/ghostty/config.ghostty $HOME/.config/ghostty/config.ghostty
+
 # Claude Code config
 mkdir -p $HOME/.claude
 ln -sfn $base_dir/CLAUDE.md $HOME/.claude/
