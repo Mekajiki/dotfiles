@@ -44,7 +44,7 @@
      「origin にもう存在しない branch」の worktree を docker down + worktree remove + branch -D
 ```
 
-Claude へ「EnterWorktree 直後に cl-setup.sh を呼ぶ」ルールはグローバル `~/.claude/CLAUDE.md`（dotfiles の `src/CLAUDE.md`）に記述してある。
+Claude へのルール（「ファイル編集 or サーバ立ち上げが必要になったら `EnterWorktree` で worktree を切る」「`EnterWorktree` 直後に `cl-setup.sh` を呼ぶ」）はグローバル `~/.claude/CLAUDE.md`（dotfiles の `src/CLAUDE.md`）に記述してある。
 
 ## `cl-setup.sh` の動作
 
