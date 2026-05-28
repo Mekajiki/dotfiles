@@ -1,3 +1,7 @@
+font-family = "UDEV Gothic NF"
+font-size = 14
+font-thicken = true
+bold-color = bright
 theme = Homebrew
 background-opacity = 0.9
 background-blur = true
