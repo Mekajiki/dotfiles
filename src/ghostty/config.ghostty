@@ -1,5 +1,9 @@
-font-family = "Osaka-Mono"
-font-codepoint-map = U+3000-U+303F,U+3040-U+30FF,U+4E00-U+9FFF,U+FF00-U+FFEF=Osaka-Mono
+# OsakaMono NB = Osaka-Mono から埋め込みビットマップ(bdat/bloc)を除去したアウトライン専用版。
+# 素の Osaka-Mono は ppem 9/12/14 のビットマップ字形を内蔵し、サイズ/thicken により
+# ビットマップとアウトラインが切り替わって同じ字が別書体に見えるため。生成スクリプト:
+# https://gist.github.com/Mekajiki/d6ad31e27c38617321c11e3a6df858e6
+# (各マシンで一度実行して ~/Library/Fonts に置く。未生成なら素の Osaka 等にフォールバック)
+font-family = "OsakaMono NB"
 font-size = 13
 font-thicken = true
 bold-color = bright
