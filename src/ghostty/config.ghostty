@@ -1,9 +1,11 @@
 font-family = "Osaka-Mono"
+font-codepoint-map = U+3000-U+303F,U+3040-U+30FF,U+4E00-U+9FFF,U+FF00-U+FFEF=Osaka-Mono
 font-size = 13
 font-thicken = true
 bold-color = bright
 cursor-style = bar
 theme = Homebrew
+shell-integration-features = ssh-env,ssh-terminfo
 background-opacity = 0.9
 background-blur = true
 maximize = true
