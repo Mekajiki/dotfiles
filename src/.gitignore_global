@@ -44,5 +44,6 @@ gradlew.bat
 
 
 docker-compose.override.yml
+compose.override.yml
 
 ~$*
