@@ -1,7 +1,8 @@
 font-family = "Osaka-Mono"
-font-size = 14
+font-size = 13
 font-thicken = true
 bold-color = bright
+cursor-style = bar
 theme = Homebrew
 background-opacity = 0.9
 background-blur = true
