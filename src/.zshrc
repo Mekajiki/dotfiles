@@ -27,6 +27,11 @@ case ${OSTYPE} in
       ;;
 esac
 
+# env
+#
+# timg をオプション無しで kitty graphics protocol 描画させる
+export TIMG_PIXELATION=k
+
 #aliases
 #
 alias f='fg'
