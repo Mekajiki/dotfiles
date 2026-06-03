@@ -34,6 +34,7 @@ install_packages_linux() {
   local pkgs=(
     zsh tmux vim git curl unzip ca-certificates
     build-essential locales xclip
+    zoxide fzf
   )
   sudo apt-get update
   sudo apt-get install -y "${pkgs[@]}"
@@ -46,7 +47,7 @@ install_packages_macos() {
       "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
   log "Installing brew formulae"
-  local formulae=(zsh tmux vim git ghq rbenv ruby-build nvm coreutils z)
+  local formulae=(zsh tmux vim git ghq rbenv ruby-build nvm coreutils zoxide fzf)
   brew install "${formulae[@]}" || true
 }
 
@@ -130,16 +131,21 @@ install_ghq_linux() {
 }
 
 # ---------------------------------------------------------------------------
-# rupa/z via ghq (sourced from .zshrc on Linux)
+# zoxide history migration (rupa/z の後継。.zshrc が zoxide init する)
+# zoxide / fzf 本体は apt / brew のパッケージで導入済み。
+# 旧 rupa/z の履歴 ~/.z があり、まだ zoxide db が無いときだけ一度だけ取り込む。
 # ---------------------------------------------------------------------------
-install_z() {
-  local target="$HOME/ghq/github.com/rupa/z"
-  if [ -d "$target/.git" ]; then
-    log "rupa/z already cloned"
+migrate_z_history() {
+  command -v zoxide >/dev/null || return 0
+  local db="${_ZO_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/zoxide}/db.zo"
+  if [ -f "$db" ]; then
+    log "zoxide db already exists; skipping ~/.z import"
     return
   fi
-  log "Cloning rupa/z via ghq"
-  PATH="$HOME/.local/bin:$PATH" ghq get rupa/z
+  if [ -f "$HOME/.z" ]; then
+    log "Importing rupa/z history (~/.z) into zoxide"
+    zoxide import --from z "$HOME/.z"
+  fi
 }
 
 # ---------------------------------------------------------------------------
@@ -215,7 +221,7 @@ main() {
       install_packages_macos
       ;;
   esac
-  install_z
+  migrate_z_history
   link_dotfiles
   setup_vim_plugins
   set_default_shell
