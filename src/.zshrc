@@ -127,22 +127,30 @@ zstyle ':completion:*' list-colors 'di=36' 'ln=35' 'ex=31' 'bd=37;46' 'cd=36;43'
 
 # end About ls command
 
-# z - jump around
+# z - jump around (zoxide)
 #
-# brewインストールならprofile.d配下、Linux/WSLではghqでcloneしたrupa/zを使う。
-for _z_candidate in \
-  /opt/homebrew/etc/profile.d/z.sh \
-  /usr/local/etc/profile.d/z.sh \
-  $HOME/ghq/github.com/rupa/z/z.sh; do
-  if [[ -f $_z_candidate ]]; then
-    . $_z_candidate
-    function precmd () {
-      _z --add "$(pwd -P)"
+# rupa/z の後継。`z foo` で frecency ジャンプ、`zi foo` で fzf による絞り込み。
+# --cmd z で従来どおり `z` のコマンド名を維持する。
+eval "$(zoxide init zsh --cmd z)"
+
+# 引数なしの `z`、および query が当たらなかったときも fzf 絞り込みに落とす。
+# zi (zoxide --interactive) は zoxide の非ファジーマッチで先に絞るためタイポに弱い。
+# そこで no match 時は全リストを fzf に流し、タイポ文字列を fzf の --query に渡す。
+# fzf はファジーなので入れ替わり程度のタイポでも候補に残り、--select-1 で一意なら即移動。
+function z() {
+  if [[ $# -eq 0 ]]; then
+    __zoxide_zi
+  else
+    __zoxide_z "$@" 2>/dev/null || {
+      local dir
+      dir="$(zoxide query --list | fzf --height=40% --reverse --select-1 --query="$*")" \
+        && __zoxide_cd "$dir"
     }
-    break
   fi
-done
-unset _z_candidate
+}
+
+# fzf - 端末でのファジー検索 (Ctrl-T / Ctrl-R / **<TAB>)。zi の絞り込みにも使われる。
+source <(fzf --zsh)
 
 # Prompt
 #
