@@ -1,11 +1,13 @@
-# OsakaMono NB = Osaka-Mono から埋め込みビットマップ(bdat/bloc)を除去したアウトライン専用版。
-# 素の Osaka-Mono は ppem 9/12/14 のビットマップ字形を内蔵し、サイズ/thicken により
-# ビットマップとアウトラインが切り替わって同じ字が別書体に見えるため。生成スクリプト:
-# https://gist.github.com/Mekajiki/d6ad31e27c38617321c11e3a6df858e6
-# (各マシンで一度実行して ~/Library/Fonts に置く。未生成なら素の Osaka 等にフォールバック)
-font-family = "OsakaMono NB"
+# SF Mono = Apple 純正の等幅。Terminal.app 同梱の OTF を ~/Library/Fonts へコピーして使う:
+#   cp /System/Applications/Utilities/Terminal.app/Contents/Resources/Fonts/SF-Mono-*.otf ~/Library/Fonts/
+# Regular/Bold/Italic を実字形で持つので合成bold(faux bold)のにじみが出ない。
+# Latin 専用フォントのため、日本語は2番目の font-family にフォールバックさせる。
+# フォールバック先はヒラギノ角ゴシック(明朝でなくゴシック)。素の "Hiragino Sans" は
+# W3/W4 相当で細いため、太めの W6 を明示する(W0=極細〜W9=極太)。
+font-family = "SF Mono"
+font-family = "Hiragino Sans W6"
 font-size = 13
-font-thicken = true
+font-thicken = false
 bold-color = bright
 cursor-style = bar
 theme = Homebrew
@@ -13,3 +15,8 @@ shell-integration-features = ssh-env,ssh-terminfo
 background-opacity = 0.9
 background-blur = true
 maximize = true
+
+# マシン固有の上書き。dotfiles では配布せず各マシンの ~/.config/ghostty/local.ghostty に置く。
+# include は親より後に読まれるため font-size 等をここで上書きできる。? で未配置でもエラーにしない。
+# 例: 高DPIでない大型ディスプレイのマシンだけ font-size を上げる等。
+config-file = ?local.ghostty
