@@ -10,6 +10,8 @@ font-size = 13
 font-thicken = false
 bold-color = bright
 cursor-style = bar
+# tmux 上でしか作業しないので、終了/クローズ時のプロセス実行中確認ダイアログは不要。
+confirm-close-surface = false
 theme = Homebrew
 shell-integration-features = ssh-env,ssh-terminfo
 background-opacity = 0.9
