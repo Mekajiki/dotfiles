@@ -13,8 +13,13 @@ cursor-style = bar
 # tmux 上でしか作業しないので、終了/クローズ時のプロセス実行中確認ダイアログは不要。
 confirm-close-surface = false
 theme = Homebrew
+# Homebrew テーマの青(4=#0d0dbf)/明青(12=#0000ff)は黒背景で暗すぎて読み辛いので、
+# Terminal.app 同様に青系だけ明るめに差し替える。theme より後に書いて上書きする。
+# bold-color=bright と併せ、bold の青は明青(12)が使われる。
+palette = 4=#5c8cff
+palette = 12=#88aaff
 shell-integration-features = ssh-env,ssh-terminfo
-background-opacity = 0.9
+background-opacity = 0.95
 background-blur = true
 maximize = true
 
