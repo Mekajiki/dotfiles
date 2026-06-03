@@ -1,10 +1,16 @@
-- Commit title message always should be what's is achieved by the change, not what the change is. Describe why you make the change below the title only when the change might be hard to understand.
 - コミットは常に許可を求めろや
-- Bashツールで `$()` を使わないこと（毎回承認が必要になるため）。git commitは `-m "message"` で、gh pr createの--bodyも直接文字列で渡す。git pushとgh pr createは別々のコマンドとして実行する。
-- 本来エラーになるべき箇所でnullチェックして握りつぶすような過剰なエラー処理をしない。設定ミスやバグは早期に気付けるようにする。
-- `gh pr create` の本文に `## Test plan` のチェックボックス形式セクションを書かない。テストでカバーした内容に言及するなら単純な箇条書きで書き、特になければ省略する。
-- ユーザーが貼り付けた絶対パスがローカルに存在しなかった場合、SSH 接続元のホームディレクトリが sshfs で `~/m2pro/` と `~/hammurabi/` にマウントされている可能性があるため、そちらも確認する。m2pro と hammurabi は Mac なのでホームディレクトリは `/Users/mekajiki/` で、これが `~/m2pro/` および `~/hammurabi/` に対応する。例えば `/Users/mekajiki/Downloads/foo.png` が貼り付けられた場合は `~/m2pro/Downloads/foo.png` や `~/hammurabi/Downloads/foo.png` を試す。Linux 側のホームパス（`/home/mekajiki/...`）が見つからない場合も、ホーム以下の相対パスを `~/m2pro/` `~/hammurabi/` 配下に当てて探す。マウントポイント自体が存在しないホスト（接続元がそのホストでない場合）はスキップする。
-- ファイル編集またはサーバ（compose / dev server 等）の立ち上げが必要になったタイミングで、着手前に `EnterWorktree('<branch名>')` で worktree を切ってから作業する。branch 名は会話の文脈から決める。すでに `.claude/worktrees/` 配下にいる場合は不要。同一リポで複数セッションが走った際の編集衝突・port 衝突を避けるのが目的。merge 済みや origin 不在の worktree は `SessionStart` フックが自動で掃除するので、多少過剰に切って構わない。
-  - ただし worktree はあくまで「並行セッションでの衝突回避」が目的。現実的に並行作業が起きず port 競合も無いリポ（設定管理リポ等）では worktree を切らずメインで直接編集してよい。判断に迷ったらユーザーに確認する。
-  - 特に **この dotfiles リポ自体を編集する場合は worktree を使わない**。`$HOME` への symlink がメインの作業ツリーを指すため、worktree 上で編集してもメインに merge するまで実環境（`~/.config/...` 等）に反映されず、かえって遠回りになる。メインで直接編集し、`コミットは常に許可を求めろや` に従って commit する。
-- `EnterWorktree` を使った直後は必ず `bash ~/.claude/hooks/cl-setup.sh` を実行する。`compose.override.yml` (auto-load 名) が生成され host port と docker compose project 名が他 worktree と分離される。`make up` や `docker compose up` をそのまま叩けば override が反映される。compose を持たないリポではスクリプト側で skip される。詳細は dotfiles の `docs/claude-worktree.md`。
+- Bashツールで `$()` を使わないこと（毎回承認が必要になるため）．git commitは `-m "message"` で，gh pr createの--bodyも直接文字列で渡す．git pushとgh pr createは別々のコマンドとして実行する．
+- 本来エラーになるべき箇所でnullチェックして握りつぶすような過剰なエラー処理をしない．設定ミスやバグは早期に気付けるようにする．
+- ユーザーが貼り付けた絶対パスがローカルに存在しなかった場合，SSH 接続元のホームディレクトリが sshfs で `~/m2pro/` と `~/hammurabi/` にマウントされている可能性があるため，そちらも確認する．m2pro と hammurabi は Mac なのでホームディレクトリは `/Users/mekajiki/` で，これが `~/m2pro/` および `~/hammurabi/` に対応する．例えば `/Users/mekajiki/Downloads/foo.png` が貼り付けられた場合は `~/m2pro/Downloads/foo.png` や `~/hammurabi/Downloads/foo.png` を試す．Linux 側のホームパス（`/home/mekajiki/...`）が見つからない場合も，ホーム以下の相対パスを `~/m2pro/` `~/hammurabi/` 配下に当てて探す．マウントポイント自体が存在しないホスト（接続元がそのホストでない場合）はスキップする．
+- ファイル編集またはサーバ（compose / dev server 等）の立ち上げが必要になったタイミングで，着手前に `EnterWorktree('<branch名>')` で worktree を切ってから作業する．branch 名は会話の文脈から決める．すでに `.claude/worktrees/` 配下にいる場合は不要．同一リポで複数セッションが走った際の編集衝突・port 衝突を避けるのが目的．merge 済みや origin 不在の worktree は `SessionStart` フックが自動で掃除するので，多少過剰に切って構わない．
+  - ただし worktree はあくまで「並行セッションでの衝突回避」が目的．現実的に並行作業が起きず port 競合も無いリポ（設定管理リポ等）では worktree を切らずメインで直接編集してよい．判断に迷ったらユーザーに確認する．
+  - 特に **この dotfiles リポ自体を編集する場合は worktree を使わない**．`$HOME` への symlink がメインの作業ツリーを指すため，worktree 上で編集してもメインに merge するまで実環境（`~/.config/...` 等）に反映されず，かえって遠回りになる．メインで直接編集し，`コミットは常に許可を求めろや` に従って commit する．
+- `EnterWorktree` を使った直後は必ず `bash ~/.claude/hooks/cl-setup.sh` を実行する．`compose.override.yml` (auto-load 名) が生成され host port と docker compose project 名が他 worktree と分離される．`make up` や `docker compose up` をそのまま叩けば override が反映される．compose を持たないリポではスクリプト側で skip される．詳細は dotfiles の `docs/claude-worktree.md`．
+- コミット・PR メッセージは私のスタイルに寄せる．冗長にしない．
+  - 共通: 日本語で，達成したことを体言止め/終止形で書き，過去形にしない．文章を書くときは全角「，．」で統一する．識別子・コマンド名はバッククォートで囲む（`rubocop`, `annotate_models` 等）．prefix（`feat:` 等）は付けても付けなくてもよいが，付けるならそのリポジトリの既存慣習に合わせる．
+  - コミット
+    - タイトル: 何を達成する変更なのか．
+    - 本文: タイトルと diff を見れば変更内容が自明なら不要．自明でない場合に補足する（特殊な実装方法を採った，複数の選択肢からその実装を選んだ理由 等）．
+  - PR
+    - タイトル: 何を達成する変更なのか．
+    - 本文: 起点の issue があれば必ず `resolve <issue URL>`（または `fix <issue URL>`）を記載する．issue と変更内容が自明ならそれ以上は不要．必要なら補足する: ①本番リリース時に必要なこと ②issue と変更の関係が自明でない場合（コミット本文と同様）．Markdown 見出し・チェックボックス・「## Test plan」テンプレートは使わない．
