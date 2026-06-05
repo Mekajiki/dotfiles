@@ -149,8 +149,8 @@ function z() {
   fi
 }
 
-# fzf - 端末でのファジー検索 (Ctrl-T / Ctrl-R / **<TAB>)。zi の絞り込みにも使われる。
-source <(fzf --zsh)
+# fzf 自体は z()/zi が fzf バイナリを直接呼ぶので shell 統合 (fzf --zsh) は読み込まない。
+# 読み込むと Ctrl-R が標準のインクリメンタル履歴検索を奪って fzf ファジー検索に化けるため。
 
 # Prompt
 #
