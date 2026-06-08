@@ -22,6 +22,13 @@ for hook in $base_dir/claude-hooks/*.sh; do
   ln -sfn "$hook" $HOME/.claude/hooks/
 done
 
+# Claude Code skills (ディレクトリ単位で symlink。各 skill は <name>/SKILL.md)
+mkdir -p $HOME/.claude/skills
+for skill in $base_dir/claude-skills/*/; do
+  [ -d "$skill" ] || continue
+  ln -sfn "${skill%/}" $HOME/.claude/skills/
+done
+
 # settings.local.json は Claude 本体が書き込まないので symlink して dotfiles から管理する。
 # permissions / enabledPlugins / hooks 等の dotfiles で同期したい設定はここに置く。
 # settings.json と Claude Code 側でマージされ、scalar は settings.local が優先、
