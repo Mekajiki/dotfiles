@@ -131,6 +131,28 @@ install_ghq_linux() {
 }
 
 # ---------------------------------------------------------------------------
+# SF Mono フォント (macOS)
+# Ghostty config が font-family = "SF Mono" を主フォントにしている。SF Mono は
+# 単体配布されず Terminal.app 同梱の OTF を ~/Library/Fonts へコピーして使う。
+# 未インストールだと Hiragino Sans へ Latin までフォールバックし描画が崩れる。
+# ---------------------------------------------------------------------------
+install_sf_mono_macos() {
+  [ "$OS" = macos ] || return 0
+  local src="/System/Applications/Utilities/Terminal.app/Contents/Resources/Fonts"
+  if [ ! -d "$src" ]; then
+    warn "Terminal.app fonts not found; skipping SF Mono install"
+    return 0
+  fi
+  if ls "$HOME/Library/Fonts"/SF-Mono-*.otf >/dev/null 2>&1; then
+    log "SF Mono already installed"
+    return 0
+  fi
+  log "Installing SF Mono OTFs to ~/Library/Fonts (for Ghostty)"
+  mkdir -p "$HOME/Library/Fonts"
+  cp "$src"/SF-Mono-*.otf "$HOME/Library/Fonts/"
+}
+
+# ---------------------------------------------------------------------------
 # zoxide history migration (rupa/z の後継。.zshrc が zoxide init する)
 # zoxide / fzf 本体は apt / brew のパッケージで導入済み。
 # 旧 rupa/z の履歴 ~/.z があり、まだ zoxide db が無いときだけ一度だけ取り込む。
@@ -219,6 +241,7 @@ main() {
       ;;
     macos)
       install_packages_macos
+      install_sf_mono_macos
       ;;
   esac
   migrate_z_history
