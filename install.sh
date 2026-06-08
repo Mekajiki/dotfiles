@@ -153,24 +153,6 @@ install_sf_mono_macos() {
 }
 
 # ---------------------------------------------------------------------------
-# zoxide history migration (rupa/z の後継。.zshrc が zoxide init する)
-# zoxide / fzf 本体は apt / brew のパッケージで導入済み。
-# 旧 rupa/z の履歴 ~/.z があり、まだ zoxide db が無いときだけ一度だけ取り込む。
-# ---------------------------------------------------------------------------
-migrate_z_history() {
-  command -v zoxide >/dev/null || return 0
-  local db="${_ZO_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/zoxide}/db.zo"
-  if [ -f "$db" ]; then
-    log "zoxide db already exists; skipping ~/.z import"
-    return
-  fi
-  if [ -f "$HOME/.z" ]; then
-    log "Importing rupa/z history (~/.z) into zoxide"
-    zoxide import --from z "$HOME/.z"
-  fi
-}
-
-# ---------------------------------------------------------------------------
 # Locale (Linux/WSL)
 # ---------------------------------------------------------------------------
 setup_locale() {
@@ -244,7 +226,6 @@ main() {
       install_sf_mono_macos
       ;;
   esac
-  migrate_z_history
   link_dotfiles
   setup_vim_plugins
   set_default_shell
