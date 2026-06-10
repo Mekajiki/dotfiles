@@ -1,1 +1,5 @@
 .DS_Store
+
+# settings.json は Claude 本体が skipWorkflowUsageWarning 等を自動書き込みするので追跡しない
+# (実設定は claude-settings.local.json に一元化)
+src/claude-settings.json
