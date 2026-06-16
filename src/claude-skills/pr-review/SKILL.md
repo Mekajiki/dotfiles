@@ -15,6 +15,7 @@ description: >-
 
 ## ワークフロー
 
+0. **セッションタイトルに PR 番号を含める**：対象が確定したら、レビューの最初の出力で `{org}/{repo}#{pr_number}`（例: `mekajiki/dotfiles#123`）を明示し、これがセッションタイトルに反映されるようにする。タイトルを直接設定するツールは無いため、冒頭で必ずこの識別子を出すことで誘導する。
 1. **対象を取得**：PR番号 or URL から
    - `gh pr view <n> --json title,body,author,baseRefName,headRefName,state,additions,deletions,files,commits`
    - `gh pr diff <n>`
