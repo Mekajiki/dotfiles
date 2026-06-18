@@ -18,9 +18,9 @@ theme = Homebrew
 # bold-color=bright と併せ、bold の青は明青(12)が使われる。
 palette = 4=#5c8cff
 palette = 12=#88aaff
-# tmux で分割するので Ghostty 標準の分割(⌘D=右,⌘S=下)は使わない。無効化して誤爆を防ぐ。
+# tmux で分割するので Ghostty 標準の分割(⌘D=右,⌘⇧D=下)は使わない。無効化して誤爆を防ぐ。
 keybind = cmd+d=unbind
-keybind = cmd+s=unbind
+keybind = cmd+shift+d=unbind
 shell-integration-features = ssh-env,ssh-terminfo
 background-opacity = 0.95
 background-blur = true
