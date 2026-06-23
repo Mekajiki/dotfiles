@@ -40,7 +40,10 @@ gradlew.bat
 .devcontainer
 
 .vscode
-.claude
+
+# Claude Code: 共有設定(settings.json/skills/commands)は追跡可能にし，個人・ローカル分のみ除外
+.claude/settings.local.json
+.claude/worktrees/
 
 
 docker-compose.override.yml
