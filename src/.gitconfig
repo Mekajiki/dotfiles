@@ -40,3 +40,5 @@
   extendedRegexp = true
 [advice]
 	skippedCherryPicks = false
+[credential "https://git.heroku.com"]
+	helper = !heroku git:credentials
