@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Claude が EnterWorktree で .claude/worktrees/<branch>/ に入った直後に呼ぶ想定。
 # 当該 worktree に compose.override.yml (auto-load 名) を生成し、
 # host port と docker compose project 名を branch ベースで決定的に分離する。
@@ -123,9 +123,10 @@ volume_empty() {
   [ -z "$(docker run --rm -v "$1":/vol busybox sh -c 'ls -A /vol | head -1')" ]
 }
 
+# 複製は速くするためだけの仕掛けなので、失敗したらその volume は諦めて先へ進む
+# (compose が空の volume を作り直し、従来通り install が走るだけ)。
 clone_volume() {
   short=$1
-  echo "$defined_volumes" | grep -qx "$short" || return 0
   src="${main_project}_${short}"
   dst="${project}_${short}"
   [ "$src" = "$dst" ] && return 0
@@ -134,19 +135,29 @@ clone_volume() {
     echo "  $short: already populated, skipped"
     return 0
   fi
-  docker volume create "$dst" >/dev/null
-  if docker run --rm -v "$src":/from:ro -v "$dst":/to busybox cp -a /from/. /to/; then
+  if docker volume create "$dst" >/dev/null &&
+    docker run --rm -v "$src":/from:ro -v "$dst":/to busybox cp -a /from/. /to/; then
     echo "  $short: cloned from $src"
-  else
-    docker volume rm "$dst" >/dev/null 2>&1 || true
-    echo "  $short: clone failed, falls back to a full install" >&2
+    return 0
   fi
+  # 中途半端に埋まった volume を残すと install が謎に壊れるので、消してから諦める
+  docker volume rm "$dst" >/dev/null 2>&1 || true
+  echo "  $short: clone failed, gave up (a full install will run)" >&2
 }
 
-echo "cl-setup: cloning install volumes from ${main_project} ..."
+targets=""
 for v in $clone_targets; do
-  clone_volume "$v"
+  if echo "$defined_volumes" | grep -qx "$v"; then
+    targets="$targets $v"
+  fi
 done
-echo
+
+if [ -n "$targets" ]; then
+  echo "cl-setup: cloning install volumes from ${main_project} ..."
+  for v in $targets; do
+    clone_volume "$v"
+  done
+  echo
+fi
 
 echo "Run with: docker compose up -d   (or 'make up')"
