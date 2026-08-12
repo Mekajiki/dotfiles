@@ -9,6 +9,7 @@
 | 同じ作業ツリーで複数 Claude がファイル編集して衝突 | `EnterWorktree` で `.claude/worktrees/<branch>/` に物理分離 |
 | 複数 worktree で同じ compose を立ち上げるとリソース名がぶつかる | `cl-setup.sh` が `compose.override.yml` を生成、トップレベル `name: <repo>-<branch>` で project 名を分離 |
 | host port 衝突（複数 worktree で `3000:3000` を取り合う） | `cl-setup.sh` が branch 名 hash から決定的に host port を算出し override にリテラルで埋め込む |
+| project 分離により volume も空になり、worktree ごとに `bundle install` / `yarn install` を待たされる | `cl-setup.sh` が main worktree の install 系 volume（bundler / yarn / node_modules）を複製 |
 | `down` 忘れ・volume 残骸の蓄積 | `SessionEnd` フックで `docker compose down -v --remove-orphans`（override は auto-load される） |
 | merge 済み branch の worktree が残り続ける | `SessionStart` フックで「origin から消えた branch」の worktree を docker down + worktree remove |
 
@@ -20,6 +21,7 @@
 - dangling images / build cache の定期掃除 → launchd で別途 `docker system prune`
 - anipos の service 名（`server`, `mailcatcher`, `yard`, `chrome`）と異なる compose を持つリポの port 分離
 - リポに `compose.override.yml` が commit されているケース（dotfiles は無条件で上書きする）
+- DB データの引き継ぎ（`pg_volume` の複製）→ 稼働中の data directory を生コピーすると壊れた断面になり得るので複製しない。`make db/setup` で作る
 
 ## 想定フロー
 
@@ -35,6 +37,7 @@
       → branch 名 hash から host port を計算
       → compose.override.yml (auto-load 名) を worktree 直下に生成
         (リテラル port 値, name: <repo>-feature-xxx)
+      → main worktree の install 系 volume を新 project 名の volume に複製
 4. Claude が make up / docker compose up -d を叩く
    → auto-load された override により port と project 名が分離された状態で起動
 5. /exit
@@ -60,16 +63,17 @@ bash ~/.claude/hooks/cl-setup.sh
 
 1. cwd の basename を `<branch>` として認識
 2. `git rev-parse --git-common-dir` で main worktree の repo root を辿り、basename を `<repo>` として認識
-3. `<branch>` の sha1 hash から host port を計算
+3. project 名を `<repo>-<branch>` から compose と同じ規則（小文字化 + `[a-z0-9_-]` 以外を除去）で正規化
+4. `<branch>` の sha1 hash から host port を計算
    - server: `20000 + (hash % 1000)`
    - mailcatcher: `21000 + (hash % 1000)`
    - yard: `22000 + (hash % 1000)`
    - chrome (VNC): `23000 + (hash % 1000)`
-4. base compose を検出（`compose.yml` → `compose.yaml` → `docker-compose.yml` → `docker-compose.yaml` の優先順）
-5. `docker compose -f <base> config --services` で base に存在する service 一覧を取得
-6. anipos の 4 service（server / mailcatcher / yard / chrome）のうち base に存在するもののみ override を出力:
+5. base compose を検出（`compose.yml` → `compose.yaml` → `docker-compose.yml` → `docker-compose.yaml` の優先順）
+6. `docker compose -f <base> config --services` で base に存在する service 一覧を取得
+7. anipos の 4 service（server / mailcatcher / yard / chrome）のうち base に存在するもののみ override を出力:
    ```yaml
-   name: <repo>-<branch>
+   name: <project>
    services:
      server:
        ports: !override
@@ -82,9 +86,30 @@ bash ~/.claude/hooks/cl-setup.sh
        ports: !override
          - "<chrome_vnc_port>:5900"
    ```
-7. 出力先は base に対応する auto-load 名（`compose.yml` → `compose.override.yml` 等）
-8. port 一覧を stdout に表示
-9. compose ファイルが無いリポでは何も生成せず exit 0
+8. 出力先は base に対応する auto-load 名（`compose.yml` → `compose.override.yml` 等）
+9. port 一覧を stdout に表示
+10. install 系 volume を main worktree から複製（後述）
+11. compose ファイルが無いリポでは何も生成せず exit 0
+
+### volume の複製
+
+project 名を分けた副作用として volume も新規＝空になり、worktree ごとに `bundle install` / `yarn install` をやり直すことになる。これを避けるため、main worktree の volume が既にあれば中身を複製してから起動する。
+
+- 対象は install 成果物・キャッシュだけ（`bundler_volume` / `yarn_volume` / `node_modules_volume`）。リポの compose に定義が無いものは黙って skip する
+- `pg_volume` 等のデータ volume は複製しない（スコープ外を参照）
+- 複製元は `<main の project 名>_<volume 名>`。main の project 名は `docker compose config` の `name:` 行から取り、取れなければ repo 名を正規化して組み立てる
+- 複製先が既にあって中身が入っていれば何もしない（冪等）
+- 複製は `busybox cp -a` を挟んだ一時コンテナで行う。monorail の3つ（計 1.6GB 程度）で約10秒
+- 複製に失敗したら複製先 volume を消して先に進む（install からやり直しになるだけ）
+
+monorail で計測した効果:
+
+| | 空 volume から | main から複製 |
+| --- | --- | --- |
+| `bundle install` | 42.4s | 0.8s |
+| `yarn install` | 11.5s | 4.1s |
+
+複製元が古いと差分だけ install が走る。特に main の image の ruby が worktree の image と違うと native extension が全部作り直しになり、`bundle install` が 33.7s まで戻る（それでも空からより速い）。トラブルシュートを参照。
 
 ### auto-load について
 
@@ -150,6 +175,17 @@ branch 名の hash 由来なので確率は低いが 0 ではない。違う bra
 - `gh` がタイムアウトや認証エラーで失敗したケース
 
 不要なら手動で `git -C <repo> worktree remove --force <wt> && git -C <repo> branch -D <branch>` を叩く。
+
+### volume を複製したのに `bundle install` が走る
+
+worktree は project ごとに image を build するので、main が古い image のまま（`make build` していない）だと ruby の版が食い違う。extension は `extensions/<platform>/<ruby api version>/` 配下に置かれるため、版が違うと native extension を持つ gem が全部作り直しになる。
+
+```sh
+docker run --rm --entrypoint ruby <repo>-bundler:latest -e 'puts RUBY_VERSION'
+docker run --rm --entrypoint ruby <repo>-<branch>-bundler:latest -e 'puts RUBY_VERSION'
+```
+
+食い違っていたら main 側で `make build && make up` して複製元を作り直す。
 
 ### compose `!override` syntax が効かない
 
