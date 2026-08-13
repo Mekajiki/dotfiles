@@ -8,7 +8,7 @@
 - ファイル編集またはサーバ（compose / dev server 等）の立ち上げが必要になったタイミングで，着手前に `EnterWorktree('<branch名>')` で worktree を切ってから作業する．branch 名は会話の文脈から決める．すでに `.claude/worktrees/` 配下にいる場合は不要．同一リポで複数セッションが走った際の編集衝突・port 衝突を避けるのが目的．merge 済みや origin 不在の worktree は `SessionStart` フックが自動で掃除するので，多少過剰に切って構わない．
   - ただし worktree はあくまで「並行セッションでの衝突回避」が目的．現実的に並行作業が起きず port 競合も無いリポ（設定管理リポ等）では worktree を切らずメインで直接編集してよい．判断に迷ったらユーザーに確認する．
   - 特に **この dotfiles リポ自体を編集する場合は worktree を使わない**．`$HOME` への symlink がメインの作業ツリーを指すため，worktree 上で編集してもメインに merge するまで実環境（`~/.config/...` 等）に反映されず，かえって遠回りになる．メインで直接編集し，`コミットは常に許可を求めろや` に従って commit する．
-- `EnterWorktree` を使った直後は必ず `bash ~/.claude/hooks/cl-setup.sh` を実行する．`compose.override.yml` (auto-load 名) が生成され host port と docker compose project 名が他 worktree と分離される．`make up` や `docker compose up` をそのまま叩けば override が反映される．同時に main worktree の install 系 volume (bundler / yarn / node_modules) を複製するので，`bundle install` / `yarn install` の待ちはほぼ無くなる．compose を持たないリポではスクリプト側で skip される．詳細は dotfiles の `docs/claude-worktree.md`．
+- `EnterWorktree` を使った直後は必ず `bash ~/.claude/hooks/cl-setup.sh` を実行する．`compose.override.yml` (auto-load 名) が生成され host port と docker compose project 名が他 worktree と分離される．`make up` や `docker compose up` をそのまま叩けば override が反映される．同時に bundler / yarn の volume を main worktree のものに `external` で相乗りさせるので，`bundle install` は不要になり `yarn install` も cache 済みで速い．compose を持たないリポではスクリプト側で skip される．詳細は dotfiles の `docs/claude-worktree.md`．
 - コミット・PR メッセージは私のスタイルに寄せる．冗長にしない．
   - 共通: 日本語で，達成したことを体言止め/終止形で書き，過去形にしない．文章を書くときは全角「，．」で統一する．識別子・コマンド名はバッククォートで囲む（`rubocop`, `annotate_models` 等）．prefix（`feat:` 等）は付けても付けなくてもよいが，付けるならそのリポジトリの既存慣習に合わせる．
   - コミット

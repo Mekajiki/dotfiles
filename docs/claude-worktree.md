@@ -9,7 +9,7 @@
 | 同じ作業ツリーで複数 Claude がファイル編集して衝突 | `EnterWorktree` で `.claude/worktrees/<branch>/` に物理分離 |
 | 複数 worktree で同じ compose を立ち上げるとリソース名がぶつかる | `cl-setup.sh` が `compose.override.yml` を生成、トップレベル `name: <repo>-<branch>` で project 名を分離 |
 | host port 衝突（複数 worktree で `3000:3000` を取り合う） | `cl-setup.sh` が branch 名 hash から決定的に host port を算出し override にリテラルで埋め込む |
-| project 分離により volume も空になり、worktree ごとに `bundle install` / `yarn install` を待たされる | `cl-setup.sh` が main worktree の install 系 volume（bundler / yarn / node_modules）を複製 |
+| project 分離により volume も空になり、worktree ごとに `bundle install` / `yarn install` を待たされる | `cl-setup.sh` が install 系 volume（bundler / yarn）を main worktree のものに `external` で相乗りさせる |
 | `down` 忘れ・volume 残骸の蓄積 | `SessionEnd` フックで `docker compose down -v --remove-orphans`（override は auto-load される） |
 | merge 済み branch の worktree が残り続ける | `SessionStart` フックで「origin から消えた branch」の worktree を docker down + worktree remove |
 
@@ -21,7 +21,8 @@
 - dangling images / build cache の定期掃除 → launchd で別途 `docker system prune`
 - anipos の service 名（`server`, `mailcatcher`, `yard`, `chrome`）と異なる compose を持つリポの port 分離
 - リポに `compose.override.yml` が commit されているケース（dotfiles は無条件で上書きする）
-- DB データの引き継ぎ（`pg_volume` の複製）→ 稼働中の data directory を生コピーすると壊れた断面になり得るので複製しない。`make db/setup` で作る
+- DB データの引き継ぎ（`pg_volume` の共有）→ branch ごとに migration 状態が違うので共有しない。`make db/setup` で作る
+- `node_modules_volume` の共有 → lockfile 1つに対応する実体ツリーなので branch 間で共有すると壊れる。worktree ごとに `yarn install`（cache は共有されるので速い）
 
 ## 想定フロー
 
@@ -36,8 +37,8 @@
       → base compose を検出し、その中に存在する anipos service だけ override 対象に
       → branch 名 hash から host port を計算
       → compose.override.yml (auto-load 名) を worktree 直下に生成
-        (リテラル port 値, name: <repo>-feature-xxx)
-      → main worktree の install 系 volume を新 project 名の volume に複製
+        (リテラル port 値, name: <repo>-feature-xxx,
+         bundler/yarn volume を main の volume に external で相乗り)
 4. Claude が make up / docker compose up -d を叩く
    → auto-load された override により port と project 名が分離された状態で起動
 5. /exit
@@ -85,31 +86,47 @@ bash ~/.claude/hooks/cl-setup.sh
      chrome:
        ports: !override
          - "<chrome_vnc_port>:5900"
+   volumes:
+     bundler_volume:
+       name: <main の project 名>_bundler_volume
+       external: true
+     yarn_volume:
+       name: <main の project 名>_yarn_volume
+       external: true
    ```
 8. 出力先は base に対応する auto-load 名（`compose.yml` → `compose.override.yml` 等）
-9. port 一覧を stdout に表示
-10. install 系 volume を main worktree から複製（後述）
+9. install 系 volume を main worktree の volume に向ける `volumes:` を同じ override に出力（後述）
+10. port 一覧と共有 volume を stdout に表示
 11. compose ファイルが無いリポでは何も生成せず exit 0
 
-### volume の複製
+### install volume の共有
 
-project 名を分けた副作用として volume も新規＝空になり、worktree ごとに `bundle install` / `yarn install` をやり直すことになる。これを避けるため、main worktree の volume が既にあれば中身を複製してから起動する。
+project 名を分けた副作用として volume も新規＝空になり、worktree ごとに `bundle install` / `yarn install` をやり直すことになる。これを避けるため、install 成果物・キャッシュの volume だけ **main worktree の volume に `external` で相乗りさせる**（コピーは取らない）。
 
-- 対象は install 成果物・キャッシュだけ（`bundler_volume` / `yarn_volume` / `node_modules_volume`）。リポの compose に定義が無いものは黙って skip する
-- `pg_volume` 等のデータ volume は複製しない（スコープ外を参照）
-- 複製元は `<main の project 名>_<volume 名>`。main の project 名は `docker compose config` の `name:` 行から取り、取れなければ repo 名を正規化して組み立てる
-- 複製先が既にあって中身が入っていれば何もしない（冪等）
-- 複製は `busybox cp -a` を挟んだ一時コンテナで行う。monorail の3つ（計 1.6GB 程度）で約10秒
-- 複製に失敗したら複製先 volume を消して先に進む（install からやり直しになるだけ）
+- 対象は `bundler_volume`（`/usr/local/bundle`）と `yarn_volume`（yarn の global cache）。リポの compose に定義が無いものは黙って skip する
+- 参照先は `<main の project 名>_<volume 名>`。main の project 名は `docker compose config` の `name:` 行から取り、取れなければ repo 名を正規化して組み立てる
+- `external: true` にすることで worktree 側の `docker compose down -v`（`SessionEnd` フック）でも消えない。`external` なしの `name:` 指定だけだと消えてしまう
+- `external` な volume は存在しないと compose が起動を拒否するので、`cl-setup.sh` が `docker volume create` しておく（既にあれば no-op）
+- `node_modules_volume` / `pg_volume` は共有しない（スコープ外を参照）
 
-monorail で計測した効果:
+#### 共有して壊れない理由
 
-| | 空 volume から | main から複製 |
+- gem は `gems/<name>-<version>/` と version キーで置かれ、install は加算のみ（`bundle clean` はデフォルトで走らない）。別 branch の gem が消されることはない
+- native extension は `extensions/<platform>/<ruby api version>/` 配下なので、branch 間で ruby の版が違っても共存する
+- 並行 `bundle install` は bundler が `<bundle_path>/bundler.lock` に取る flock（`Bundler::ProcessLock`）で直列化される
+- `bundle exec` は Gemfile.lock 解決なので、`/usr/local/bundle/bin/` の binstub が別 branch のもので上書きされていても影響しない
+- yarn cache は content-addressed なので共有して問題ない
+
+#### 複製方式（旧実装）との比較
+
+| | 複製 | external 共有 |
 | --- | --- | --- |
-| `bundle install` | 42.4s | 0.8s |
-| `yarn install` | 11.5s | 4.1s |
+| worktree 作成時のコスト | 1.6GB のコピー約10秒 | 0 |
+| `bundle install` | main が古いと差分 install | 不要（main と同一物） |
+| ruby 版がずれた場合 | native extension を全部作り直し（33.7s） | 共存するので影響なし |
+| ディスク | worktree の数だけ 1.6GB | 1つ |
 
-複製元が古いと差分だけ install が走る。特に main の image の ruby が worktree の image と違うと native extension が全部作り直しになり、`bundle install` が 33.7s まで戻る（それでも空からより速い）。トラブルシュートを参照。
+`node_modules_volume` は worktree ごとに空から作られるが、yarn cache を共有しているので `yarn install` はネットワークに出ずに済む。
 
 ### auto-load について
 
@@ -176,16 +193,15 @@ branch 名の hash 由来なので確率は低いが 0 ではない。違う bra
 
 不要なら手動で `git -C <repo> worktree remove --force <wt> && git -C <repo> branch -D <branch>` を叩く。
 
-### volume を複製したのに `bundle install` が走る
+### worktree で `external volume ... not found` と言われる
 
-worktree は project ごとに image を build するので、main が古い image のまま（`make build` していない）だと ruby の版が食い違う。extension は `extensions/<platform>/<ruby api version>/` 配下に置かれるため、版が違うと native extension を持つ gem が全部作り直しになる。
+main 側で `make nuke`（`docker compose down --volumes`）を叩くと共有元の volume が消えるため。worktree で `cl-setup.sh` を再実行すれば `docker volume create` で作り直される（中身は空なので `bundle install` は一度走る）。
 
-```sh
-docker run --rm --entrypoint ruby <repo>-bundler:latest -e 'puts RUBY_VERSION'
-docker run --rm --entrypoint ruby <repo>-<branch>-bundler:latest -e 'puts RUBY_VERSION'
-```
+なお worktree 側の `down -v` では消えない（`external: true` のため）。共有元を意図的に捨てたい場合だけ main で `make nuke` するか、全 worktree を止めた上で `docker volume rm <repo>_bundler_volume` する。
 
-食い違っていたら main 側で `make build && make up` して複製元を作り直す。
+### 共有 volume が太ってきた
+
+branch 間で gem が加算されていくだけで削除されないので、長く使うと `/usr/local/bundle` が膨らむ。全 worktree を止めてから `docker volume rm <repo>_bundler_volume` して作り直すのが手っ取り早い（次の起動で `bundle install` が一度走る）。
 
 ### compose `!override` syntax が効かない
 

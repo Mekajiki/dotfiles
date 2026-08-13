@@ -87,6 +87,42 @@ EOF
   fi
 }
 
+# project 名を分けると volume も新規＝空になり、worktree ごとに bundle install /
+# yarn install をやり直すことになって遅い。install 成果物・キャッシュの volume だけ
+# main worktree のものを external として掴み、install 自体を不要にする。
+# external なので worktree 側の `down -v` (SessionEnd フック) では消えない。
+#
+# 共有して良い理由:
+#   bundler_volume は gems/<name>-<version>/ の version キーで加算のみ (bundle clean は
+#   走らない)、native extension も extensions/<platform>/<ruby api version>/ 配下なので
+#   branch 間で ruby 版が違っても共存する。並行 install は bundler が
+#   <bundle_path>/bundler.lock に取る flock で直列化される。
+#   yarn_volume は yarn の global cache でこれも content-addressed。
+# 共有しないもの:
+#   node_modules_volume は lockfile 1つに対応する実体ツリーなので branch 間で壊れる。
+#   pg_volume 等のデータ volume も当然共有しない。
+shared_volumes=""
+
+# main worktree の project 名 (volume 名の prefix)。compose に聞くのが確実だが
+# env_file 不足等で失敗し得るので、その場合は同じ正規化規則で組み立てる。
+main_project=`cd "$main_repo" && docker compose config 2>/dev/null | sed -n 's/^name: *//p' | head -1`
+[ -n "$main_project" ] || main_project=`normalize "$repo_name"`
+
+defined_volumes=`docker compose -f "$base" config --volumes 2>/dev/null`
+for v in bundler_volume yarn_volume; do
+  if echo "$defined_volumes" | grep -qx "$v"; then
+    shared_volumes="$shared_volumes $v"
+  fi
+done
+
+emit_shared_volume() {
+  cat <<EOF
+  $1:
+    name: ${main_project}_$1
+    external: true
+EOF
+}
+
 {
   echo "name: ${project}"
   echo "services:"
@@ -94,6 +130,12 @@ EOF
   emit_service mailcatcher "$mailcatcher_port" 1080
   emit_service yard        "$yard_port"        8808
   emit_service chrome      "$chrome_vnc_port"  5900
+  if [ -n "$shared_volumes" ]; then
+    echo "volumes:"
+    for v in $shared_volumes; do
+      emit_shared_volume "$v"
+    done
+  fi
 } > "$override"
 
 # 出力 (Claude / 人間向けに port をサマリ)
@@ -105,57 +147,13 @@ has_service yard        && echo "  yard:            http://localhost:${yard_port
 has_service chrome      && echo "  chrome VNC:      vnc://localhost:${chrome_vnc_port}"
 echo
 
-# project 名を分けると volume も空で作られ、worktree ごとに bundle/yarn install を
-# 一からやり直すことになって遅い。main worktree に対応する volume があれば中身を
-# 複製し、install を差分だけで済ませる。
-# 対象は install 成果物・キャッシュのみ。DB 等のデータ volume は稼働中コピーが壊れた
-# 断面になり得るので複製しない (pg は従来通り db/setup で作る)。
-clone_targets="bundler_volume yarn_volume node_modules_volume"
-
-# main worktree の project 名 (volume 名の prefix)。compose に聞くのが確実だが
-# env_file 不足等で失敗し得るので、その場合は同じ正規化規則で組み立てる。
-main_project=`cd "$main_repo" && docker compose config 2>/dev/null | sed -n 's/^name: *//p' | head -1`
-[ -n "$main_project" ] || main_project=`normalize "$repo_name"`
-
-defined_volumes=`docker compose -f "$base" config --volumes 2>/dev/null`
-
-volume_empty() {
-  [ -z "$(docker run --rm -v "$1":/vol busybox sh -c 'ls -A /vol | head -1')" ]
-}
-
-# 複製は速くするためだけの仕掛けなので、失敗したらその volume は諦めて先へ進む
-# (compose が空の volume を作り直し、従来通り install が走るだけ)。
-clone_volume() {
-  short=$1
-  src="${main_project}_${short}"
-  dst="${project}_${short}"
-  [ "$src" = "$dst" ] && return 0
-  docker volume inspect "$src" >/dev/null 2>&1 || return 0
-  if docker volume inspect "$dst" >/dev/null 2>&1 && ! volume_empty "$dst"; then
-    echo "  $short: already populated, skipped"
-    return 0
-  fi
-  if docker volume create "$dst" >/dev/null &&
-    docker run --rm -v "$src":/from:ro -v "$dst":/to busybox cp -a /from/. /to/; then
-    echo "  $short: cloned from $src"
-    return 0
-  fi
-  # 中途半端に埋まった volume を残すと install が謎に壊れるので、消してから諦める
-  docker volume rm "$dst" >/dev/null 2>&1 || true
-  echo "  $short: clone failed, gave up (a full install will run)" >&2
-}
-
-targets=""
-for v in $clone_targets; do
-  if echo "$defined_volumes" | grep -qx "$v"; then
-    targets="$targets $v"
-  fi
-done
-
-if [ -n "$targets" ]; then
-  echo "cl-setup: cloning install volumes from ${main_project} ..."
-  for v in $targets; do
-    clone_volume "$v"
+# external volume は存在しないと compose が起動を拒否する。main worktree を一度も
+# 立ち上げていない場合に備えて作っておく (既にあれば no-op)。
+if [ -n "$shared_volumes" ]; then
+  echo "cl-setup: sharing install volumes with ${main_project} (external, kept on 'down -v'):"
+  for v in $shared_volumes; do
+    docker volume create "${main_project}_${v}" >/dev/null
+    echo "  $v -> ${main_project}_${v}"
   done
   echo
 fi
